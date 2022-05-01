@@ -15,7 +15,7 @@ def winner(conf):
   if abs(countX - countO) > 1:
     print("-")
     return "-"
-
+  win = False
   result = ''
   for i in range(0, rows):
         for j in range(0, cols-2):
@@ -24,12 +24,21 @@ def winner(conf):
           if conf[j][i] == conf[j+1][i] and conf[j][i] == conf[j+2][i]:
             result = conf[j][i]
           if conf[j][j] == conf[j+1][j+1] and conf[j][j] == conf[j+2][j+2]:
-            result = conf[i][i]
-  print(result)
+            result = conf[j][j]
+          if conf[j][j+2] == conf[j+1][j+1] and conf[j][j+2] == conf[j+2][j]:
+            result = conf[j][j+2]
+  if result and countX == countO:
+    print("-")
+    return "-"
+  else:
+    print(result)
+    return result
 
 
 
-#winner((("X", "-", "O"), ("X", "O", "-"), ("X", "-", "O")))
-#winner((("O", "-", "X"), ("X", "X", "X"), ("O", "-", "O")))
-#winner((("O", "", "X"), ("X", "O", "X"), ("O", "-", "O")))
+winner((("X", "-", "O"), ("X", "-", "O"), ("X", "-", "O")))
+winner((("O", "-", "X"), ("X", "X", "X"), ("O", "-", "O")))
+winner((("O", "", "X"), ("X", "O", "X"), ("O", "-", "O")))
 winner((("O", "", "O"), ("O", "O", "X"), ("O", "-", "O")))
+winner((("X", "-", "O"), ("-", "O", "-"), ("O", "-", "X")))
+winner((("X", "X", "X"), ("-", "O", "-"), ("O", "-", "O")))

@@ -1,14 +1,21 @@
+import collections
 def convert(wcal):
     '''implement this function'''
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    ans = dict()
-    for key, value in wcal.items():
-        for day in days:
-            if day in value:
-                ans[] = {day: value[day]}
-        else:
-            pass
-        print(ans)
+    ans = []
+    ans_dict = dict()
+    for key, values in wcal.items():
+        ans.append(values)
+
+    for i in range(0, len(ans)):
+        for key, value in ans[i].items():
+            if key not in ans_dict:
+                ans_dict[key] = {value}
+            else:
+                ans_dict[key].add(value)
+
+    print(ans_dict)
+
 
 w1 = {"Thu": 1, "Fri": 2, "Sat": 3, "Sun": 4}
 w2 = {"Mon": 5, "Tue": 6, "Wed": 7, "Thu": 8, "Fri": 9, "Sat": 10, "Sun": 11}
