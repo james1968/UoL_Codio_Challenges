@@ -4,6 +4,7 @@ class Counter:
     _items: dict()  # <- suggested, you can change this
     counter = 0
     price_counter = 0.0
+    _food = dict()
 
     def __init__(self, ID: str):
         '''creates a new counter with a given ID'''
@@ -11,22 +12,40 @@ class Counter:
         self._items = dict()
         self.counter = 0
         self.price_counter = 0
+        self._food = dict()
 
     def add(self, item_name: str, amount: int, price_of_unit: float) -> None:
         '''Adds amount of items with item_name and specifies price_of_unit. You can assume that every addition for the same item_name will have the same price_of_unit.'''
         self.counter += amount
         self.price_counter += (amount * price_of_unit)
+        self._food[item_name] = price_of_unit
         self._items[self.id] = [self.counter, self.price_counter]
-        print(self._items)
 
     def remove(self, item_name: str, amount: int) -> None:
         '''Removes the given amount of items with the given item name.'''
+        for key, value in self._food.items():
+            if item_name == key:
+                self.price_counter -= (amount * value)
+                self.counter -= amount
+                self._items[self.id] = [self.counter, self.price_counter]
+
+
 
     def reset(self):
         '''Removes all the records of items previously added.'''
+        self._items = dict()
+        self.counter = 0
+        self.price_counter = 0
+        self._food = dict()
+
 
     def get_total(self) -> float:
         '''Returns the total sum rounded to two digits after decimal point .'''
+        for key, values in self._items.items():
+            for value in values:
+                if type(value) != int:
+                    ans = round(value, 2)
+                    return ans
 
     def status(self) -> str:
         '''Returs string of form "Id N M", where Id is id of counter, N is total amount of all items and M total price of them rounded to two digits after decimal point (with both digits printed).'''
