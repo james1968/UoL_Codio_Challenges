@@ -1,7 +1,7 @@
 from typing import *
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
-    #  tuple called coords to hold co-ordinates in x,y format
+    # tuple called coords to hold co-ordinates in x,y format
     coords = ()
     # check the first coordinate is a letter from a - z
     if loc[0].isalpha() == False:
@@ -40,11 +40,11 @@ class Piece:
     pos_Y: int
     side: bool  # True for White and False for Black
 
-    def __init__(self, pos_X: int, pos_Y: int, side_: bool):
+    def __init__(self, pos_X: int, pos_Y: int, side: bool):
         '''sets initial values'''
         self.pos_X = pos_X
         self.pos_Y = pos_Y
-        self.side = bool
+        self.side = side
 
 
 Board = Tuple[int, List[Piece]]
@@ -62,9 +62,9 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
 
 
 class Rook(Piece):
-    def __init__(self, pos_X: int, pos_Y: int, side_: bool):
+    def __init__(self, pos_X: int, pos_Y: int, side: bool):
         '''sets initial values by calling the constructor of Piece'''
-        Piece.__init__(self, pos_X, pos_Y, side_)
+        Piece.__init__(self, pos_X, pos_Y, side)
 
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -95,9 +95,9 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
-    def __init__(self, pos_X: int, pos_Y: int, side_: bool):
+    def __init__(self, pos_X: int, pos_Y: int, side: bool):
         '''sets initial values by calling the constructor of Piece'''
-        Piece.__init__(self, pos_X, pos_Y, side_)
+        Piece.__init__(self, pos_X, pos_Y, side)
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to rule [Rule1] and [Rule4]'''
@@ -113,9 +113,9 @@ class Bishop(Piece):
 
 
 class King(Piece):
-    def __init__(self, pos_X: int, pos_Y: int, side_: bool):
+    def __init__(self, pos_X: int, pos_Y: int, side: bool):
         '''sets initial values by calling the constructor of Piece'''
-        Piece.__init__(self, pos_X, pos_Y, side_)
+        Piece.__init__(self, pos_X, pos_Y, side)
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to rule [Rule3] and [Rule4]'''
@@ -157,13 +157,12 @@ def is_stalemate(side: bool, B: Board) -> bool:
     - use can_move_to
     '''
 
-
 def read_board(filename: str) -> Board:
     '''
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
-    Board1 = tuple()
+    Board1 = ()
     Board_arr = []
     board = []
     run = True
@@ -184,8 +183,8 @@ def read_board(filename: str) -> Board:
                 line = infile.readline()
             Board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
             run = False
-
     Board1 += (Board_arr[0], )
+    max_length = int(Board1[0])
     pieces_arr = []
     for i in range(1, 3):
         if i == 1:
@@ -198,7 +197,6 @@ def read_board(filename: str) -> Board:
                     count_B += 1
                     name = "wb" + str(count_B)
                     name = Bishop(xy_loc[0], xy_loc[1], True)
-                    print(name.pos_X)
                     pieces_arr.append(name)
                 if Board_arr[i][j][0] == "R":
                     count_R += 1
@@ -218,16 +216,16 @@ def read_board(filename: str) -> Board:
                 if Board_arr[i][j][0] == "B":
                     count_B += 1
                     name = "bb" + str(count_B)
-                    name = Bishop(xy_loc[0], xy_loc[1], True)
+                    name = Bishop(xy_loc[0], xy_loc[1], False)
                     pieces_arr.append(name)
                 if Board_arr[i][j][0] == "R":
                     count_R += 1
                     name = "br" + str(count_R)
-                    name = Rook(xy_loc[0], xy_loc[1], True)
+                    name = Rook(xy_loc[0], xy_loc[1], False)
                     pieces_arr.append(name)
                 if Board_arr[i][j][0] == "K":
                     name = "bk"
-                    name = King(xy_loc[0], xy_loc[1], True)
+                    name = King(xy_loc[0], xy_loc[1], False)
                     pieces_arr.append(name)
             Board1 += (pieces_arr,)
 
@@ -251,7 +249,9 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
 
 def conf2unicode(B: Board) -> str:
     '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
-
+    for i in range(1, len(B)):
+        for j in range(0, len(B[i])):
+            print(type(B[i][j]), B[i][j].pos_X, B[i][j].pos_Y, B[i][j].side)
 
 def main() -> None:
     '''
@@ -265,6 +265,7 @@ def main() -> None:
     #filename = input("File name for initial configuration: ")
     read_board("board_examp.txt")
 
-
 if __name__ == '__main__':  # keep this in
     main()
+
+conf2unicode(read_board("board_examp.txt"))
