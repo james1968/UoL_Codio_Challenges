@@ -93,11 +93,12 @@ def test_read_board1():
 
     B = read_board("board_examp.txt")
     assert B[0] == 5
+    #assert B[1] == ['wb1', 'wr1', 'wb2', 'wr2', 'wk', 'bk', 'br1', 'br2', 'br3']
 
     for piece in B[1]:  # we check if every piece in B is also present in B1; if not, the test will fail
         found = False
         for piece1 in B1[1]:
-            if piece.pos_x == piece1.pos_x and piece.pos_y == piece1.pos_y and piece.side == piece1.side and type(
+            if piece.pos_X == piece1.pos_X and piece.pos_Y == piece1.pos_Y and piece.side == piece1.side and type(
                     piece) == type(piece1):
                 found = True
         assert found
@@ -105,7 +106,7 @@ def test_read_board1():
     for piece1 in B1[1]:  # we check if every piece in B1 is also present in B; if not, the test will fail
         found = False
         for piece in B[1]:
-            if piece.pos_x == piece1.pos_x and piece.pos_y == piece1.pos_y and piece.side == piece1.side and type(
+            if piece.pos_X == piece1.pos_X and piece.pos_Y == piece1.pos_Y and piece.side == piece1.side and type(
                     piece) == type(piece1):
                 found = True
         assert found

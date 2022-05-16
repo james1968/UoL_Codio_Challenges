@@ -36,14 +36,14 @@ def index2location(x: int, y: int) -> str:
 
 
 class Piece:
-    pos_x: int
-    pos_y: int
+    pos_X: int
+    pos_Y: int
     side: bool  # True for White and False for Black
 
     def __init__(self, pos_X: int, pos_Y: int, side_: bool):
         '''sets initial values'''
         self.pos_X = pos_X
-        self.pos_y = pos_Y
+        self.pos_Y = pos_Y
         self.side = bool
 
 
@@ -64,6 +64,8 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
 class Rook(Piece):
     def __init__(self, pos_X: int, pos_Y: int, side_: bool):
         '''sets initial values by calling the constructor of Piece'''
+        Piece.__init__(self, pos_X, pos_Y, side_)
+
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''
@@ -113,6 +115,7 @@ class Bishop(Piece):
 class King(Piece):
     def __init__(self, pos_X: int, pos_Y: int, side_: bool):
         '''sets initial values by calling the constructor of Piece'''
+        Piece.__init__(self, pos_X, pos_Y, side_)
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to rule [Rule3] and [Rule4]'''
@@ -184,22 +187,50 @@ def read_board(filename: str) -> Board:
 
     Board1 += (Board_arr[0], )
     pieces_arr = []
-    count_B = 0
     for i in range(1, 3):
         if i == 1:
+            count_B = 0
+            count_R = 0
             for j in range(0, len(Board_arr[i])):
                 Board_arr[i][j] = Board_arr[i][j].strip()
                 xy_loc = location2index(Board_arr[i][j][1:])
                 if Board_arr[i][j][0] == "B":
                     count_B += 1
                     name = "wb" + str(count_B)
-                    print(name)
+                    name = Bishop(xy_loc[0], xy_loc[1], True)
+                    print(name.pos_X)
+                    pieces_arr.append(name)
+                if Board_arr[i][j][0] == "R":
+                    count_R += 1
+                    name = "wr" + str(count_R)
+                    name = Rook(xy_loc[0], xy_loc[1], True)
+                    pieces_arr.append(name)
+                if Board_arr[i][j][0] == "K":
+                    name = "wk"
+                    name = King(xy_loc[0], xy_loc[1], True)
+                    pieces_arr.append(name)
+        if i == 2:
+            count_B = 0
+            count_R = 0
+            for j in range(0, len(Board_arr[i])):
+                Board_arr[i][j] = Board_arr[i][j].strip()
+                xy_loc = location2index(Board_arr[i][j][1:])
+                if Board_arr[i][j][0] == "B":
+                    count_B += 1
+                    name = "bb" + str(count_B)
                     name = Bishop(xy_loc[0], xy_loc[1], True)
                     pieces_arr.append(name)
+                if Board_arr[i][j][0] == "R":
+                    count_R += 1
+                    name = "br" + str(count_R)
+                    name = Rook(xy_loc[0], xy_loc[1], True)
+                    pieces_arr.append(name)
+                if Board_arr[i][j][0] == "K":
+                    name = "bk"
+                    name = King(xy_loc[0], xy_loc[1], True)
+                    pieces_arr.append(name)
             Board1 += (pieces_arr,)
-    print(Board_arr)
-    print(pieces_arr)
-    print(Board1)
+
     return Board1
 
 
