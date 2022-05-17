@@ -52,6 +52,14 @@ Board = Tuple[int, List[Piece]]
 
 def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     '''checks if there is piece at coordinates pox_X, pos_Y of board B'''
+    board_length = B[0]
+    try:
+        if pos_X > board_length or pos_Y > board_length:
+            raise ValueError
+    except ValueError:
+        raise ValueError
+        print("X and Y coordinates must be less than length of the board")
+
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
             X = B[i][j].pos_X
@@ -282,4 +290,5 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-#is_piece_at(2, 2, read_board("board_examp.txt"))
+#is_piece_at(7, 2, read_board("board_examp.txt"))
+#index2location(27, 5)
