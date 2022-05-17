@@ -185,48 +185,27 @@ def read_board(filename: str) -> Board:
             run = False
     Board1 += (Board_arr[0], )
     pieces_arr = []
-    board_piece_name = []
     for i in range(1, 3):
         if i == 1:
-            count_B = 0
-            count_R = 0
             for j in range(0, len(Board_arr[i])):
                 Board_arr[i][j] = Board_arr[i][j].strip()
                 xy_loc = location2index(Board_arr[i][j][1:])
                 if Board_arr[i][j][0] == "B":
-                    count_B += 1
-                    name = "wb" + str(count_B)
-                    board_piece_name.append(name)
                     pieces_arr.append(Bishop(xy_loc[0], xy_loc[1], True))
                 if Board_arr[i][j][0] == "R":
-                    count_R += 1
-                    name = "wr" + str(count_R)
-                    board_piece_name.append(name)
                     pieces_arr.append(Rook(xy_loc[0], xy_loc[1], True))
                 if Board_arr[i][j][0] == "K":
-                    name = "wk"
-                    board_piece_name.append(name)
                     pieces_arr.append(King(xy_loc[0], xy_loc[1], True))
         if i == 2:
-            count_B = 0
-            count_R = 0
             for j in range(0, len(Board_arr[i])):
                 Board_arr[i][j] = Board_arr[i][j].strip()
                 xy_loc = location2index(Board_arr[i][j][1:])
                 if Board_arr[i][j][0] == "B":
-                    count_B += 1
-                    name = "bb" + str(count_B)
-                    name = Bishop(xy_loc[0], xy_loc[1], False)
-                    pieces_arr.append(name)
+                    pieces_arr.append(Bishop(xy_loc[0], xy_loc[1], False))
                 if Board_arr[i][j][0] == "R":
-                    count_R += 1
-                    name = "br" + str(count_R)
-                    name = Rook(xy_loc[0], xy_loc[1], False)
-                    pieces_arr.append(name)
+                    pieces_arr.append(Rook(xy_loc[0], xy_loc[1], False))
                 if Board_arr[i][j][0] == "K":
-                    name = "bk"
-                    name = King(xy_loc[0], xy_loc[1], False)
-                    pieces_arr.append(name)
+                    pieces_arr.append(King(xy_loc[0], xy_loc[1], False))
             Board1 += (pieces_arr,)
     return Board1
 
@@ -255,7 +234,6 @@ def conf2unicode(B: Board) -> str:
         board_matrix.append([])
         for j in range(0, size):
             board_matrix[i].append("\u2001")
-    print(board_matrix)
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
             X = B[i][j].pos_X-1
@@ -272,11 +250,14 @@ def conf2unicode(B: Board) -> str:
                 board_matrix[Y][X] = "\u265C"
             if type(B[i][j]) == King and B[i][j].side == False:
                 board_matrix[Y][X] = "\u265A"
-
+    board_string = ""
     for i in range(len(board_matrix)-1, -1, -1):
         for j in range(0, len(board_matrix[i])):
-            print(board_matrix[i][j], end="")
-        print()
+        #    print(board_matrix[i][j], end="")
+            board_string += board_matrix[i][j]
+        board_string += "\n"
+    print(board_string)
+
 def main() -> None:
     '''
     runs the play
