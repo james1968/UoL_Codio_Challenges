@@ -253,10 +253,10 @@ def conf2unicode(B: Board) -> str:
     board_string = ""
     for i in range(len(board_matrix)-1, -1, -1):
         for j in range(0, len(board_matrix[i])):
-        #    print(board_matrix[i][j], end="")
             board_string += board_matrix[i][j]
-        board_string += "\n"
-    print(board_string)
+        if i > 0:
+            board_string += "\n"
+    return board_string
 
 def main() -> None:
     '''
@@ -273,4 +273,4 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-conf2unicode(read_board("board_examp.txt"))
+#conf2unicode(read_board("board_examp.txt"))
