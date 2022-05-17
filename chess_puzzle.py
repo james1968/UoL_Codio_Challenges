@@ -162,7 +162,7 @@ def read_board(filename: str) -> Board:
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
-    Board1 = ()
+    Board1 = tuple()
     Board_arr = []
     board = []
     run = True
@@ -184,8 +184,8 @@ def read_board(filename: str) -> Board:
             Board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
             run = False
     Board1 += (Board_arr[0], )
-    max_length = int(Board1[0])
     pieces_arr = []
+    board_piece_name = []
     for i in range(1, 3):
         if i == 1:
             count_B = 0
@@ -196,17 +196,17 @@ def read_board(filename: str) -> Board:
                 if Board_arr[i][j][0] == "B":
                     count_B += 1
                     name = "wb" + str(count_B)
-                    name = Bishop(xy_loc[0], xy_loc[1], True)
-                    pieces_arr.append(name)
+                    board_piece_name.append(name)
+                    pieces_arr.append(Bishop(xy_loc[0], xy_loc[1], True))
                 if Board_arr[i][j][0] == "R":
                     count_R += 1
                     name = "wr" + str(count_R)
-                    name = Rook(xy_loc[0], xy_loc[1], True)
-                    pieces_arr.append(name)
+                    board_piece_name.append(name)
+                    pieces_arr.append(Rook(xy_loc[0], xy_loc[1], True))
                 if Board_arr[i][j][0] == "K":
                     name = "wk"
-                    name = King(xy_loc[0], xy_loc[1], True)
-                    pieces_arr.append(name)
+                    board_piece_name.append(name)
+                    pieces_arr.append(King(xy_loc[0], xy_loc[1], True))
         if i == 2:
             count_B = 0
             count_R = 0
@@ -228,7 +228,6 @@ def read_board(filename: str) -> Board:
                     name = King(xy_loc[0], xy_loc[1], False)
                     pieces_arr.append(name)
             Board1 += (pieces_arr,)
-
     return Board1
 
 
@@ -249,10 +248,35 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
 
 def conf2unicode(B: Board) -> str:
     '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
+    size = B[0]
+    board_matrix = []
+
+    for i in range(0, size):
+        board_matrix.append([])
+        for j in range(0, size):
+            board_matrix[i].append("\u2001")
+    print(board_matrix)
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
-            print(type(B[i][j]), B[i][j].pos_X, B[i][j].pos_Y, B[i][j].side)
+            X = B[i][j].pos_X-1
+            Y = B[i][j].pos_Y-1
+            if type(B[i][j]) == Bishop and B[i][j].side == True:
+                board_matrix[Y][X] = "\u2657"
+            if type(B[i][j]) == Rook and B[i][j].side == True:
+                board_matrix[Y][X] = "\u2656"
+            if type(B[i][j]) == King and B[i][j].side == True:
+                board_matrix[Y][X] = "\u2654"
+            if type(B[i][j]) == Bishop and B[i][j].side == False:
+                board_matrix[Y][X] = "\u265D"
+            if type(B[i][j]) == Rook and B[i][j].side == False:
+                board_matrix[Y][X] = "\u265C"
+            if type(B[i][j]) == King and B[i][j].side == False:
+                board_matrix[Y][X] = "\u265A"
 
+    for i in range(len(board_matrix)-1, -1, -1):
+        for j in range(0, len(board_matrix[i])):
+            print(board_matrix[i][j], end="")
+        print()
 def main() -> None:
     '''
     runs the play

@@ -42,6 +42,7 @@ wr2 = Rook(1, 5, True)
 wk = King(3, 5, True)
 
 B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
+
 '''
 ♖ ♔  
  ♜  ♜
