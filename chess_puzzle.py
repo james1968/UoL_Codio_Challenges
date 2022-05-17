@@ -52,6 +52,15 @@ Board = Tuple[int, List[Piece]]
 
 def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     '''checks if there is piece at coordinates pox_X, pos_Y of board B'''
+    for i in range(1, len(B)):
+        for j in range(0, len(B[i])):
+            X = B[i][j].pos_X
+            Y = B[i][j].pos_Y
+            print(X, Y)
+            if X == pos_X and Y == pos_Y:
+                print("True")
+                return True
+        return False
 
 
 def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
@@ -273,4 +282,4 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-#conf2unicode(read_board("board_examp.txt"))
+#is_piece_at(2, 2, read_board("board_examp.txt"))

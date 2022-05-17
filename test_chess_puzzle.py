@@ -54,6 +54,10 @@ B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
 
 def test_is_piece_at1():
     assert is_piece_at(2, 2, B1) == False
+    assert is_piece_at(1, 2, B1) == True
+    assert is_piece_at(5, 4, B1) == True
+    assert is_piece_at(2, 5, B1) == False
+    assert is_piece_at(3, 5, B1) == True
 
 
 def test_piece_at1():
@@ -94,7 +98,6 @@ def test_read_board1():
 
     B = read_board("board_examp.txt")
     assert B[0] == 5
-    #assert B[1] == ['wb1', 'wr1', 'wb2', 'wr2', 'wk', 'bk', 'br1', 'br2', 'br3']
 
     for piece in B[1]:  # we check if every piece in B is also present in B1; if not, the test will fail
         found = False
