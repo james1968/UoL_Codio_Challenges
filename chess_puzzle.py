@@ -55,10 +55,10 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     board_length = B[0]
     try:
         if pos_X > board_length or pos_Y > board_length:
-            raise ValueError
+            print("X and Y coordinates must be less than length of the board")
     except ValueError:
-        raise ValueError
-        print("X and Y coordinates must be less than length of the board")
+        raise V
+
 
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
@@ -74,6 +74,13 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
     returns the piece at coordinates pox_X, pos_Y of board B
     assumes some piece at coordinates pox_X, pos_Y of board B is present
     '''
+    board_length = B[0]
+    try:
+        if pos_X > board_length or pos_Y > board_length:
+            print("X and Y coordinates must be less than length of the board")
+    except ValueError as V:
+        raise V
+
     if is_piece_at(pos_X, pos_Y, B):
         for i in range(1, len(B)):
             for j in range(0, len(B[i])):
@@ -295,4 +302,4 @@ if __name__ == '__main__':  # keep this in
 
 #is_piece_at(7, 2, read_board("board_examp.txt"))
 #index2location(27, 5)
-#piece_at(4, 3, read_board("board_examp.txt"))
+piece_at(7, 3, read_board("board_examp.txt"))

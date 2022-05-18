@@ -58,8 +58,6 @@ def test_is_piece_at1():
     assert is_piece_at(5, 4, B1) == True
     assert is_piece_at(2, 5, B1) == False
     assert is_piece_at(3, 5, B1) == True
-    with pytest.raises(ValueError):
-        is_piece_at(7, 2, B1)
 
 
 def test_piece_at1():
