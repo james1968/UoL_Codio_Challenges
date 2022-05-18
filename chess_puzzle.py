@@ -64,9 +64,7 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
         for j in range(0, len(B[i])):
             X = B[i][j].pos_X
             Y = B[i][j].pos_Y
-            print(X, Y)
             if X == pos_X and Y == pos_Y:
-                print("True")
                 return True
         return False
 
@@ -76,6 +74,11 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
     returns the piece at coordinates pox_X, pos_Y of board B
     assumes some piece at coordinates pox_X, pos_Y of board B is present
     '''
+    if is_piece_at(pos_X, pos_Y, B):
+        for i in range(1, len(B)):
+            for j in range(0, len(B[i])):
+                if pos_X == B[i][j].pos_X and pos_Y == B[i][j].pos_Y:
+                    return (B[i][j])
 
 
 class Rook(Piece):
@@ -292,3 +295,4 @@ if __name__ == '__main__':  # keep this in
 
 #is_piece_at(7, 2, read_board("board_examp.txt"))
 #index2location(27, 5)
+#piece_at(4, 3, read_board("board_examp.txt"))

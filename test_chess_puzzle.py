@@ -64,6 +64,11 @@ def test_is_piece_at1():
 
 def test_piece_at1():
     assert piece_at(4, 3, B1) == br1
+    assert piece_at(2, 4, B1) == br2
+    assert piece_at(3, 5, B1) == wk
+    assert piece_at(1, 5, B1) == wr2
+    assert piece_at(5, 4, B1) == br3
+
 
 
 def test_can_reach1():
