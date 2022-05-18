@@ -70,7 +70,10 @@ def test_piece_at1():
 
 
 def test_can_reach1():
-    assert wr2.can_reach(4, 5, B1) == False
+    #assert wr2.can_reach(4, 5, B1) == False
+    assert wr2.can_reach(1, 1, B1) == False
+    assert wr2.can_reach(1, 2, B1) == False
+    assert wr2.can_reach(1, 3, B1) == True
 
 
 br2a = Rook(1, 5, False)

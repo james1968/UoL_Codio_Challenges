@@ -101,6 +101,14 @@ class Rook(Piece):
         Hint: use is_piece_at
         '''
 
+        if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side == self.side:
+            print("False")
+            return False
+        elif self.pos_X == pos_X or self.pos_Y == pos_Y:
+            print("True")
+            return True
+
+
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''
         checks if this rook can move to coordinates pos_X, pos_Y
@@ -283,6 +291,7 @@ def conf2unicode(B: Board) -> str:
             board_string += board_matrix[i][j]
         if i > 0:
             board_string += "\n"
+    print(board_string)
     return board_string
 
 def main() -> None:
@@ -302,4 +311,10 @@ if __name__ == '__main__':  # keep this in
 
 #is_piece_at(7, 2, read_board("board_examp.txt"))
 #index2location(27, 5)
-piece_at(7, 3, read_board("board_examp.txt"))
+#piece_at(7, 3, read_board("board_examp.txt"))
+wr2 = Rook(1, 5, True)
+wr2.can_reach(4, 5, read_board("board_examp.txt"))
+wr2.can_reach(1, 1, read_board("board_examp.txt"))
+wr2.can_reach(1, 2, read_board("board_examp.txt"))
+wr2.can_reach(1, 3, read_board("board_examp.txt"))
+conf2unicode(read_board("board_examp.txt"))
