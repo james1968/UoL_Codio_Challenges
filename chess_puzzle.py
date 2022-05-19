@@ -59,7 +59,6 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     except ValueError:
         raise V
 
-
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
             X = B[i][j].pos_X
@@ -101,29 +100,12 @@ class Rook(Piece):
         Hint: use is_piece_at
         '''
         #get from 1, 5 to 4, 5.  Check piece at 2,5 and 3,5
-        X = self.pos_X
-        Y = self.pos_Y
-        print(X)
-        print(Y)
-
-        diff_X = pos_X - X
-        print(diff_X)
 
         if self.pos_X != pos_X and self.pos_Y != pos_Y:
             return False
 
-        if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side == self.side:
-            print("False")
+        if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side:
             return False
-
-        if self.pos_X == pos_X or self.pos_Y == pos_Y:
-            for i in range(X, diff_X):
-                print(i)
-                if is_piece_at(i, pos_Y, B):
-                    return False
-                else:
-                    return True
-
 
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -259,6 +241,7 @@ def read_board(filename: str) -> Board:
                 if Board_arr[i][j][0] == "K":
                     pieces_arr.append(King(xy_loc[0], xy_loc[1], False))
             Board1 += (pieces_arr,)
+
     return Board1
 
 
@@ -303,7 +286,6 @@ def conf2unicode(B: Board) -> str:
             if type(B[i][j]) == King and B[i][j].side == False:
                 board_matrix[Y][X] = "\u265A"
     board_string = ""
-    print(board_matrix)
 
 
     for i in range(len(board_matrix)-1, -1, -1):
