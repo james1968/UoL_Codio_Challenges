@@ -58,6 +58,7 @@ def test_is_piece_at1():
     assert is_piece_at(5, 4, B1) == True
     assert is_piece_at(2, 5, B1) == False
     assert is_piece_at(3, 5, B1) == True
+    assert is_piece_at(4, 5, B1) == False
 
 
 def test_piece_at1():
@@ -75,8 +76,10 @@ def test_can_reach1():
     assert wr2.can_reach(3, 5, B1) == False
     assert wr2.can_reach(1, 1, B1) == False
     assert wr2.can_reach(1, 2, B1) == False
-    #assert wr2.can_reach(1, 3, B1) == True
+    assert wr2.can_reach(1, 3, B1) == True
     assert wr2.can_reach(4, 5, B1) == False
+    assert br3.can_reach(1, 4, B1) == False
+
 
 
 br2a = Rook(1, 5, False)
