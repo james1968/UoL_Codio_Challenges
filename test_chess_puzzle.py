@@ -88,7 +88,7 @@ wr2a = Rook(2, 5, True)
 
 def test_can_move_to1():
     B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk])
-    assert wr2a.can_move_to(2, 4, B2) == False
+    assert wr2a.can_move_to(2, 4, B2) == True
 
 
 def test_is_check1():

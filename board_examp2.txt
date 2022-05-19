@@ -1,0 +1,3 @@
+5
+Ba1, Ra2, Be2, Rb5, Kc5
+Kb3, Rd3, Ra5, Re4

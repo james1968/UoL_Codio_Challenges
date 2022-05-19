@@ -102,11 +102,9 @@ class Rook(Piece):
         #get from 1, 5 to 4, 5.  Check piece at 2,5 and 3,5
 
         if self.pos_X != pos_X and self.pos_Y != pos_Y:
-            print(False)
             return False
 
         if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side:
-            print(False)
             return False
 
         # check horizontal for other pieces
@@ -114,34 +112,27 @@ class Rook(Piece):
             X = pos_X - self.pos_X
             for i in range(X, self.pos_X, -1):
                 if is_piece_at(i, pos_Y, B) == True:
-                    print(False)
                     return False
-                return True
+            return True
         # check vertical for other pieces
         if pos_Y > self.pos_Y:
             Y = pos_Y - self.pos_Y
             for j in range(Y, self.pos_Y, -1):
                 if is_piece_at(pos_X, j, B) == True:
-                    print(False)
                     return False
-                return True
+            return True
         if self.pos_X > pos_X:
-            print("xx")
         # check horizontal for other pieces
             for i in range(pos_X+1, self.pos_X):
-                print(i)
                 if is_piece_at(i, pos_Y, B) == True:
-                    print(False)
                     return False
-            print(True)
             return True
         # check vertical for other pieces
         if self.pos_Y > pos_Y:
             for j in range(pos_Y+1, self.pos_Y):
                 if is_piece_at(pos_X, j, B) == True:
-                    print(False)
                     return False
-                return True
+            return True
 
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -156,6 +147,8 @@ class Rook(Piece):
         - thirdly, construct new board resulting from move
         - finally, to check [Rule5], use is_check on new board
         '''
+        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
+            return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -342,19 +335,13 @@ def main() -> None:
     '''
 
     #filename = input("File name for initial configuration: ")
-    read_board("board_examp.txt")
+    read_board("board_examp2.txt")
 
 if __name__ == '__main__':  # keep this in
     main()
 
-#is_piece_at(7, 2, read_board("board_examp.txt"))
-#index2location(27, 5)
-#piece_at(7, 3, read_board("board_examp.txt"))
-#wr2 = Rook(1, 5, True)
-#wr2.can_reach(1, 3, read_board("board_examp.txt"))
-br3 = Rook(5, 4, True)
-br3.can_reach(1, 4, read_board("board_examp.txt"))
-br2 = Rook(2, 4, True)
-br2.can_reach(1, 4, read_board("board_examp.txt"))
+wr2a = Rook(2, 5, True)
+wr2a.can_reach(2, 4, read_board("board_examp2.txt"))
+wr2a.can_move_to(2, 4, read_board("board_examp2.txt"))
 
-conf2unicode(read_board("board_examp.txt"))
+conf2unicode(read_board("board_examp2.txt"))
