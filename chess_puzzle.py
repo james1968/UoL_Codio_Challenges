@@ -104,7 +104,7 @@ class Rook(Piece):
         if self.pos_X != pos_X and self.pos_Y != pos_Y:
             return False
 
-        if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side:
+        if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side == self.side:
             return False
 
         # check horizontal for other pieces
@@ -149,6 +149,13 @@ class Rook(Piece):
         '''
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
             return True
+        elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
+            cap_piece = piece_at(pos_X, pos_Y,B)
+            print(cap_piece.side)
+            return True
+        else:
+            print(False)
+            return False
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -342,6 +349,6 @@ if __name__ == '__main__':  # keep this in
 
 wr2a = Rook(2, 5, True)
 wr2a.can_reach(2, 4, read_board("board_examp2.txt"))
-wr2a.can_move_to(2, 4, read_board("board_examp2.txt"))
+wr2a.can_move_to(1, 5, read_board("board_examp2.txt"))
 
 conf2unicode(read_board("board_examp2.txt"))
