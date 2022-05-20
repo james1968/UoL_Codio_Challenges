@@ -189,7 +189,21 @@ class King(Piece):
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to rule [Rule3] and [Rule4]'''
-        # return abs(col_from - col_to)+abs(row_from - row_to) == 3
+        if abs(self.pos_X - pos_X) + abs(self.pos_Y - pos_Y) <= 1:
+            if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
+                return True
+            else:
+                return False
+
+        if abs(self.pos_X - pos_X) == 1 and abs(self.pos_Y - pos_Y) == 1:
+            if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
+                return True
+            else:
+                return False
+
+        return False
+
+
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
@@ -347,8 +361,4 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-wr2a = Rook(2, 5, True)
-wr2a.can_reach(2, 4, read_board("board_examp2.txt"))
-wr2a.can_move_to(1, 5, read_board("board_examp2.txt"))
-
-conf2unicode(read_board("board_examp2.txt"))
+conf2unicode(read_board("board_examp.txt"))
