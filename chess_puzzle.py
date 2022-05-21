@@ -107,14 +107,12 @@ class Rook(Piece):
         if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side == self.side:
             return False
 
-        # check horizontal for other pieces
         if pos_X > self.pos_X:
             X = pos_X - self.pos_X
             for i in range(X, self.pos_X, -1):
                 if is_piece_at(i, pos_Y, B) == True:
                     return False
             return True
-        # check vertical for other pieces
         if pos_Y > self.pos_Y:
             Y = pos_Y - self.pos_Y
             for j in range(Y, self.pos_Y, -1):
@@ -122,12 +120,10 @@ class Rook(Piece):
                     return False
             return True
         if self.pos_X > pos_X:
-        # check horizontal for other pieces
             for i in range(pos_X+1, self.pos_X):
                 if is_piece_at(i, pos_Y, B) == True:
                     return False
             return True
-        # check vertical for other pieces
         if self.pos_Y > pos_Y:
             for j in range(pos_Y+1, self.pos_Y):
                 if is_piece_at(pos_X, j, B) == True:
@@ -200,13 +196,20 @@ class King(Piece):
                 return True
             else:
                 return False
-
         return False
-
-
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
+        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
+            return True
+        elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
+            cap_piece = piece_at(pos_X, pos_Y,B)
+            print(cap_piece.side)
+            return True
+        else:
+            print(False)
+            return False
+
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -361,4 +364,4 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-conf2unicode(read_board("board_examp.txt"))
+conf2unicode(read_board("board_examp2.txt"))

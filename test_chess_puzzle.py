@@ -71,7 +71,6 @@ def test_piece_at1():
 
 
 def test_can_reach1():
-    #wr2 is at (1, 5)
     assert wr2.can_reach(3, 2, B1) == False
     assert wr2.can_reach(3, 5, B1) == False
     assert wr2.can_reach(1, 1, B1) == False
@@ -97,6 +96,10 @@ def test_can_move_to1():
     assert wr2a.can_move_to(3, 5, B2) == False
     assert wr1.can_move_to(5, 2, B2) == False
     assert wr1.can_move_to(4, 2, B2) == True
+    assert bk.can_move_to(1, 2, B1) == True
+    assert bk.can_move_to(2, 4, B1) == False
+    assert bk.can_move_to(3, 4, B1) == True
+    assert wk.can_move_to(2, 5, B2) == False
 
 
 
