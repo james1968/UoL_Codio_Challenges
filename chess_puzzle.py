@@ -152,10 +152,14 @@ class Rook(Piece):
                     return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
             cap_piece = piece_at(pos_X, pos_Y,B)
-            print(cap_piece.side)
-            return True
+            print(type(cap_piece), cap_piece.pos_X, cap_piece.pos_Y, cap_piece.side)
+            for i in range(1, len(B)):
+                for j in range(0, len(B[i])):
+                    if self.pos_X == B[i][j].pos_X and self.pos_Y == B[i][j].pos_Y:
+                        B[i][j].pos_X = pos_X
+                        B[i][j].pos_Y = pos_Y
+                    return True
         else:
-            print(False)
             return False
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
@@ -369,9 +373,8 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-conf2unicode(read_board("board_examp.txt"))
+conf2unicode(read_board("board_examp2.txt"))
 
-wr2 = Rook(1, 5, True)
-wr2.can_move_to(2, 5, (read_board("board_examp.txt")))
-conf2unicode(read_board("board_examp.txt"))
+wr2 = Rook(2, 5, True)
+wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
 
