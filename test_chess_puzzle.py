@@ -79,10 +79,18 @@ def test_can_reach1():
     assert wr2.can_reach(4, 5, B1) == False
     assert br3.can_reach(1, 4, B1) == False
     assert wk.can_reach(3, 4, B1) == True
+    assert bk.can_reach(2, 4, B1) == False
     assert wk.can_reach(3, 3, B1) == False
     assert bk.can_reach(2, 4, B1) == False
     assert bk.can_reach(1, 2, B1) == True
     assert bk.can_reach(5, 5, B1) == False
+    assert wb2.can_reach(5, 5, B1) == False
+    assert wb2.can_reach(4, 3, B1) == True
+    assert wb2.can_reach(3, 4, B1) == True
+    assert wb2.can_reach(3, 3, B1) == False
+    assert wb1.can_reach(2, 2, B1) == True
+    assert wb1.can_reach(3, 3, B1) == True
+    assert wb1.can_reach(1, 5, B1) == False
 
 
 br2a = Rook(1, 5, False)

@@ -31,7 +31,6 @@ def index2location(x: int, y: int) -> str:
         print("x or y coordinate must be less than maximum board length")
 
     str_coord = (chr(x + 96) + str(y))
-    print(str_coord)
     return str_coord
 
 
@@ -178,6 +177,22 @@ class Bishop(Piece):
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to rule [Rule1] and [Rule4]'''
+        if ((self.pos_X - pos_X) - (self.pos_Y - pos_Y)) == 0:
+            if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
+                print("True")
+                return True
+            else:
+                return False
+
+        if ((self.pos_X - pos_X) + (self.pos_Y - pos_Y)) == 0:
+            if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
+                print("True2")
+                return True
+            else:
+                return False
+        print(False)
+        return False
+
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
@@ -403,7 +418,16 @@ if __name__ == '__main__':  # keep this in
 #conf2unicode(read_board("board_examp2.txt"))
 #wr2 = Rook(2, 5, True)
 #wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
-conf2unicode(read_board("board_examp2.txt"))
+#conf2unicode(read_board("board_examp2.txt"))
+wb1 = Bishop(1, 1, True)
+wb2 = Bishop(5, 2, True)
+wb1.can_reach(2, 2, read_board("board_examp.txt"))
+wb1.can_reach(3, 3, read_board("board_examp.txt"))
+wb1.can_reach(1, 5, read_board("board_examp.txt"))
+wb2.can_reach(5, 5, read_board("board_examp.txt"))
+wb2.can_reach(4, 3, read_board("board_examp.txt"))
+wb2.can_reach(3, 4, read_board("board_examp.txt"))
+wb2.can_reach(3, 3, read_board("board_examp.txt"))
 save_board("test.txt", read_board("board_examp.txt"))
 conf2unicode(read_board("test.txt"))
 
