@@ -153,10 +153,14 @@ class Rook(Piece):
                         B[i][j].pos_Y = pos_Y
                     return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
-            cap_piece = piece_at(pos_X, pos_Y,B)
-            self.pos_X = pos_X
-            self.pos_Y = pos_Y
-            return True
+            cap_piece = piece_at(pos_X, pos_Y, B)
+            print(type(cap_piece), cap_piece.pos_X, cap_piece.pos_Y, cap_piece.side)
+            for i in range(1, len(B)):
+                for j in range(0, len(B[i])):
+                    if self.pos_X == B[i][j].pos_X and self.pos_Y == B[i][j].pos_Y:
+                        B[i][j].pos_X = pos_X
+                        B[i][j].pos_Y = pos_Y
+                    return True
         else:
             return False
 

@@ -99,7 +99,7 @@ def test_can_move_to1():
     assert bk.can_move_to(1, 2, B1) == True
     assert bk.can_move_to(2, 4, B1) == False
     assert bk.can_move_to(3, 4, B1) == True
-    #assert wk.can_move_to(2, 5, B2) == False
+    assert wk.can_move_to(2, 5, B2) == False
 
 
 
