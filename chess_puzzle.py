@@ -179,20 +179,16 @@ class Bishop(Piece):
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to rule [Rule1] and [Rule4]'''
         if ((self.pos_X - pos_X) - (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
-                print("True")
                 return True
             else:
                 return False
 
         if ((self.pos_X - pos_X) + (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
-                print("True2")
                 return True
             else:
                 return False
-        print(False)
         return False
-
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
