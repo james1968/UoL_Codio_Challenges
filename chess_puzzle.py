@@ -143,6 +143,8 @@ class Rook(Piece):
         - thirdly, construct new board resulting from move
         - finally, to check [Rule5], use is_check on new board
         '''
+        temp_board_list = B[1]
+
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
             for i in range(1, len(B)):
                 for j in range(0, len(B[i])):
@@ -152,13 +154,9 @@ class Rook(Piece):
                     return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
             cap_piece = piece_at(pos_X, pos_Y,B)
-            print(type(cap_piece), cap_piece.pos_X, cap_piece.pos_Y, cap_piece.side)
-            for i in range(1, len(B)):
-                for j in range(0, len(B[i])):
-                    if self.pos_X == B[i][j].pos_X and self.pos_Y == B[i][j].pos_Y:
-                        B[i][j].pos_X = pos_X
-                        B[i][j].pos_Y = pos_Y
-                    return True
+            self.pos_X = pos_X
+            self.pos_Y = pos_Y
+            return True
         else:
             return False
 
@@ -213,10 +211,8 @@ class King(Piece):
             return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
             cap_piece = piece_at(pos_X, pos_Y,B)
-            print(cap_piece.side)
             return True
         else:
-            print(False)
             return False
 
 
@@ -309,7 +305,32 @@ def read_board(filename: str) -> Board:
 
 def save_board(filename: str, B: Board) -> None:
     '''saves board configuration into file in current directory in plain format'''
-
+    file = open(filename,"w")
+    file.write(str(B[0]) + "\n")
+    file_line_1 = ""
+    for i in range(1, len(B)):
+        for j in range(0, len(B[1])):
+            if B[i][j].side == True:
+                if type(B[i][j]) == Rook:
+                    file_line_1 += "R" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+                if type(B[i][j]) == King:
+                    file_line_1 += "K" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+                if type(B[i][j]) == Bishop:
+                    file_line_1 += "B" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+        file.write(file_line_1[:-2])
+        file.write("\n")
+    file_line_2 = ""
+    for i in range(1, len(B)):
+        for j in range(0, len(B[1])):
+            if B[i][j].side == False:
+                if type(B[i][j]) == Rook:
+                    file_line_2 += "R" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+                if type(B[i][j]) == King:
+                    file_line_2 += "K" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+                if type(B[i][j]) == Bishop:
+                    file_line_2 += "B" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
+        file.write(file_line_2[:-2])
+    file.close()
 
 def find_black_move(B: Board) -> Tuple[Piece, int, int]:
     '''
@@ -373,8 +394,13 @@ def main() -> None:
 if __name__ == '__main__':  # keep this in
     main()
 
-conf2unicode(read_board("board_examp2.txt"))
 
-wr2 = Rook(2, 5, True)
-wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
+
+#conf2unicode(read_board("board_examp2.txt"))
+#wr2 = Rook(2, 5, True)
+#wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
+conf2unicode(read_board("board_examp2.txt"))
+save_board("test.txt", read_board("board_examp.txt"))
+conf2unicode(read_board("test.txt"))
+
 
