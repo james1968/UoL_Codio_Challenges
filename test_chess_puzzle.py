@@ -115,6 +115,16 @@ def test_is_check1():
     wr2b = Rook(2, 4, True)
     B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
     assert is_check(True, B2) == True
+    assert is_check(False, B2) == True
+    wr3b = Rook(5, 1, True)
+    B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
+    assert is_check(True, B3) == False
+    assert is_check(False, B3) == True
+    br2b = Bishop(1, 4, False)
+    B4 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
+    assert is_check(False, B4) == False
+    assert is_check(True, B4) == False
+
 
 
 def test_is_checkmate1():

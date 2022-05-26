@@ -142,6 +142,8 @@ class Rook(Piece):
         - thirdly, construct new board resulting from move
         - finally, to check [Rule5], use is_check on new board
         '''
+
+        # needs to be updated to capture the piece and check if the move results in check
         temp_board_list = B[1]
 
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
@@ -177,6 +179,7 @@ class Bishop(Piece):
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to rule [Rule1] and [Rule4]'''
+        # needs to be updated for when there is a same colour piece on the diagonal
         if ((self.pos_X - pos_X) - (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
                 return True
@@ -222,6 +225,7 @@ class King(Piece):
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
+        # needs to be updated to capture the piece and check if the move results in check
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
             return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
@@ -243,7 +247,20 @@ def is_check(side: bool, B: Board) -> bool:
     checks if configuration of B is check for side
     Hint: use can_reach
     '''
+    king_x = 0
+    king_y = 0
+    for i in range(0, len(B[1])):
+        if type(B[1][i]) == King and B[1][i].side != side:
+            king_x = B[1][i].pos_X
+            king_y = B[1][i].pos_Y
+    print("False King ", king_x, king_y)
 
+    for j in range(0, len(B[1])):
+        if B[1][j].side == side:
+            print(B[1][j].pos_X, B[1][j].pos_Y, B[1][i].side)
+            if B[1][j].can_reach(king_x, king_y, B):
+                return True
+    return False
 
 def is_checkmate(side: bool, B: Board) -> bool:
     '''
@@ -415,16 +432,36 @@ if __name__ == '__main__':  # keep this in
 #wr2 = Rook(2, 5, True)
 #wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
 #conf2unicode(read_board("board_examp2.txt"))
+#wb1 = Bishop(1, 1, True)
+#wb2 = Bishop(5, 2, True)
+#wb1.can_reach(2, 2, read_board("board_examp.txt"))
+#wb1.can_reach(3, 3, read_board("board_examp.txt"))
+#wb1.can_reach(1, 5, read_board("board_examp.txt"))
+#wb2.can_reach(5, 5, read_board("board_examp.txt"))
+#wb2.can_reach(4, 3, read_board("board_examp.txt"))
+#wb2.can_reach(3, 4, read_board("board_examp.txt"))
+#wb2.can_reach(3, 3, read_board("board_examp.txt"))
+#save_board("test.txt", read_board("board_examp.txt"))
+wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
+wr1 = Rook(1, 2, True)
 wb2 = Bishop(5, 2, True)
-wb1.can_reach(2, 2, read_board("board_examp.txt"))
-wb1.can_reach(3, 3, read_board("board_examp.txt"))
-wb1.can_reach(1, 5, read_board("board_examp.txt"))
-wb2.can_reach(5, 5, read_board("board_examp.txt"))
-wb2.can_reach(4, 3, read_board("board_examp.txt"))
-wb2.can_reach(3, 4, read_board("board_examp.txt"))
-wb2.can_reach(3, 3, read_board("board_examp.txt"))
-save_board("test.txt", read_board("board_examp.txt"))
-conf2unicode(read_board("test.txt"))
+bk = King(2, 3, False)
+br1 = Rook(4, 3, False)
+br2 = Rook(2, 4, False)
+br3 = Rook(5, 4, False)
+wr2 = Rook(1, 5, True)
+wk = King(3, 5, True)
+br2a = Rook(1, 5, False)
+wr2a = Rook(2, 5, True)
+
+B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
+conf2unicode(B2)
+wr3b = Rook(5, 1, True)
+B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
+conf2unicode(B3)
+br2b = Bishop(1, 4, False)
+B4 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
+conf2unicode(B4)
 
 
