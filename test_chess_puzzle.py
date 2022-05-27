@@ -92,6 +92,11 @@ def test_can_reach1():
     assert wb1.can_reach(3, 3, B1) == True
     assert wb1.can_reach(1, 5, B1) == False
 
+    wb4 = Bishop(2, 2, True)
+    B5 = (5, [wb1, wr1, wb4, bk, br1, br2, br3, wr2, wk])
+    assert wb1.can_reach(3, 3, B5) == False
+
+
 
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)

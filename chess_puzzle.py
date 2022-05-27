@@ -56,7 +56,7 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
         if pos_X > board_length or pos_Y > board_length:
             print("X and Y coordinates must be less than length of the board")
     except ValueError:
-        raise V
+        raise ValueError
 
     for i in range(1, len(B)):
         for j in range(0, len(B[i])):
@@ -182,15 +182,34 @@ class Bishop(Piece):
         # needs to be updated for when there is a same colour piece on the diagonal
         if ((self.pos_X - pos_X) - (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
-                return True
-            else:
-                return False
+                if pos_X > self.pos_X and pos_Y > self.pos_Y:
+                    for i in range(1, pos_X):
+                        print(i)
+                        print(self.pos_X+i, self.pos_Y+i)
+                        if is_piece_at(self.pos_X+i, self.pos_Y+i, B) and piece_at(self.pos_X+i, self.pos_Y+i, B).side == self.side:
+                            print("False")
+                            return False
+                    return True
+                if pos_X < self.pos_X and pos_Y < self.pos_Y:
+                    for i in range(1, self.pos_X):
+                        if is_piece_at(self.pos_X-i, self.pos_Y-i, B) and piece_at(self.pos_X-i, self.pos_Y-i, B) == self.side:
+                            return False
+                    return True
 
         if ((self.pos_X - pos_X) + (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
-                return True
-            else:
-                return False
+                if pos_X < self.pos_X and pos_Y > self.pos_Y:
+                    for i in range(1, pos_Y):
+                        if is_piece_at(self.pos_X-i, self.pos_Y+i, B) and piece_at(self.pos_X-i, self.pos_Y+i, B) == self.side:
+                            return False
+                    return True
+                if pos_X > self.pos_X and pos_Y < self.pos_Y:
+                    for i in range(1, self.pos_Y):
+                        if is_piece_at(self.pos_X+i, self.pos_Y-i, B) and piece_at(self.pos_X+i, self.pos_Y-i, B) == self.side:
+                            return False
+                    return True
+
+        print("False3")
         return False
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -428,7 +447,7 @@ if __name__ == '__main__':  # keep this in
 
 
 
-#conf2unicode(read_board("board_examp2.txt"))
+conf2unicode(read_board("board_examp.txt"))
 #wr2 = Rook(2, 5, True)
 #wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
 #conf2unicode(read_board("board_examp2.txt"))
@@ -436,11 +455,6 @@ if __name__ == '__main__':  # keep this in
 #wb2 = Bishop(5, 2, True)
 #wb1.can_reach(2, 2, read_board("board_examp.txt"))
 #wb1.can_reach(3, 3, read_board("board_examp.txt"))
-#wb1.can_reach(1, 5, read_board("board_examp.txt"))
-#wb2.can_reach(5, 5, read_board("board_examp.txt"))
-#wb2.can_reach(4, 3, read_board("board_examp.txt"))
-#wb2.can_reach(3, 4, read_board("board_examp.txt"))
-#wb2.can_reach(3, 3, read_board("board_examp.txt"))
 #save_board("test.txt", read_board("board_examp.txt"))
 wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
@@ -455,13 +469,21 @@ wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
 
-B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
-conf2unicode(B2)
-wr3b = Rook(5, 1, True)
-B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
-conf2unicode(B3)
-br2b = Bishop(1, 4, False)
-B4 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
-conf2unicode(B4)
+#B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
+#conf2unicode(B2)
+#wr3b = Rook(5, 1, True)
+#B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
+#conf2unicode(B3)
+#br2b = Bishop(1, 4, False)
+#B4 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
+#conf2unicode(B4)
+
+#wb1.can_reach(2, 2, read_board(("board_examp.txt")))
+#wb1.can_reach(3, 3, read_board(("board_examp.txt")))
+#wb1.can_reach(3, 3, read_board(("board_examp.txt")))
+wb4 = Bishop(2, 2, True)
+B5 = (5, [wb1, wr1, wb4, bk, br1, br2, br3, wr2, wk])
+wb1.can_reach(3, 3, B5)
+
 
 
