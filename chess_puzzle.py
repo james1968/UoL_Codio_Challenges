@@ -145,23 +145,41 @@ class Rook(Piece):
 
         # needs to be updated to capture the piece and check if the move results in check
         temp_board_list = B[1]
-
-        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            for i in range(0, len(B[1])):
-                if self.pos_X == B[1][i].pos_X and self.pos_Y == B[1][i].pos_Y:
-                    B[1][i].pos_X = pos_X
-                    B[1][i].pos_Y = pos_Y
-                return True
-        elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
-            cap_piece = piece_at(pos_X, pos_Y, B)
-            print(type(cap_piece), cap_piece.pos_X, cap_piece.pos_Y, cap_piece.side)
-            for j in range(0, len(B[1])):
-                if self.pos_X == B[1][j].pos_X and self.pos_Y == B[1][j].pos_Y:
-                    B[1][j].pos_X = pos_X
-                    B[1][j].pos_Y = pos_Y
-                return True
-        else:
+        print("Current Board")
+        conf2unicode(B)
+        if self.can_reach(pos_X, pos_Y, B) == False:
             return False
+        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
+            moved_piece = type(self)(pos_X, pos_Y, self.side)
+            check_side = not self.side
+            new_list_pieces = B[1]
+            for i in new_list_pieces:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    new_list_pieces.remove(i)
+            new_list_pieces.append(moved_piece)
+            new_board = (B[0], new_list_pieces)
+            conf2unicode(new_board)
+            if is_check(check_side, new_board):
+                return False
+            else:
+                return True
+
+        if self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
+            cap_piece = piece_at(pos_X, pos_Y, B)
+            side_check = cap_piece.side
+            moved_piece = type(self)(pos_X, pos_Y, self.side)
+            new_list_pieces = B[1]
+            new_list_pieces.remove(cap_piece)
+            for i in new_list_pieces:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    new_list_pieces.remove(i)
+            new_list_pieces.append(moved_piece)
+            new_board = (B[0], new_list_pieces)
+            conf2unicode(new_board)
+            if is_check(side_check, new_board):
+                return False
+            else:
+                return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -182,8 +200,6 @@ class Bishop(Piece):
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
                 if pos_X > self.pos_X and pos_Y > self.pos_Y:
                     for i in range(1, pos_X):
-                        print(i)
-                        print(self.pos_X+i, self.pos_Y+i)
                         if is_piece_at(self.pos_X+i, self.pos_Y+i, B) and piece_at(self.pos_X+i, self.pos_Y+i, B).side == self.side:
                             print("False")
                             return False
@@ -206,8 +222,6 @@ class Bishop(Piece):
                         if is_piece_at(self.pos_X+i, self.pos_Y-i, B) and piece_at(self.pos_X+i, self.pos_Y-i, B) == self.side:
                             return False
                     return True
-
-        print("False3")
         return False
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -443,6 +457,10 @@ def conf2unicode(B: Board) -> str:
     print(board_string)
     return board_string
 
+def print_board(B: Board) -> str:
+    for i in range(0, len(B[1])):
+        print(f"{type(B[1][i])}, {B[1][i].pos_X}, {B[1][i].pos_Y}, {B[1][i].side}.")
+
 def main() -> None:
     '''
     runs the play
@@ -459,7 +477,6 @@ if __name__ == '__main__':  # keep this in
     main()
 
 
-
 wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)
@@ -472,20 +489,20 @@ wr2 = Rook(1, 5, True)
 wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
-B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
-B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
-conf2unicode(B1)
+br2b = Rook(2, 4, False)
+#B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
+B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br2b, wr2a, wk])
 conf2unicode(B2)
-
-wr2a.can_move_to(2, 4, B2)
-wr2a.can_move_to(1, 5, B2)
-wr2a.can_move_to(3, 5, B2)
-wr1.can_move_to(5, 2, B2)
-wr1.can_move_to(4, 2, B2)
-bk.can_move_to(1, 2, B1)
-bk.can_move_to(2, 4, B1)
-bk.can_move_to(3, 4, B1)
-wk.can_move_to(2, 5, B2)
+#br2.can_move_to(1, 4, B2)
+#wr2a.can_move_to(2, 4, B2)
+#wr2a.can_move_to(1, 5, B2)
+#wr2a.can_move_to(3, 5, B2)
+#wr1.can_move_to(5, 2, B2)
+#wr1.can_move_to(4, 2, B2)
+#bk.can_move_to(1, 2, B1)
+#bk.can_move_to(2, 4, B1)
+#bk.can_move_to(3, 4, B1)
+#wk.can_move_to(2, 5, B2)
 
 
 
