@@ -147,21 +147,19 @@ class Rook(Piece):
         temp_board_list = B[1]
 
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            for i in range(1, len(B)):
-                for j in range(0, len(B[i])):
-                    if self.pos_X == B[i][j].pos_X and self.pos_Y == B[i][j].pos_Y:
-                        B[i][j].pos_X = pos_X
-                        B[i][j].pos_Y = pos_Y
-                    return True
+            for i in range(0, len(B[1])):
+                if self.pos_X == B[1][i].pos_X and self.pos_Y == B[1][i].pos_Y:
+                    B[1][i].pos_X = pos_X
+                    B[1][i].pos_Y = pos_Y
+                return True
         elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
             cap_piece = piece_at(pos_X, pos_Y, B)
             print(type(cap_piece), cap_piece.pos_X, cap_piece.pos_Y, cap_piece.side)
-            for i in range(1, len(B)):
-                for j in range(0, len(B[i])):
-                    if self.pos_X == B[i][j].pos_X and self.pos_Y == B[i][j].pos_Y:
-                        B[i][j].pos_X = pos_X
-                        B[i][j].pos_Y = pos_Y
-                    return True
+            for j in range(0, len(B[1])):
+                if self.pos_X == B[1][j].pos_X and self.pos_Y == B[1][j].pos_Y:
+                    B[1][j].pos_X = pos_X
+                    B[1][j].pos_Y = pos_Y
+                return True
         else:
             return False
 
@@ -266,17 +264,19 @@ def is_check(side: bool, B: Board) -> bool:
     checks if configuration of B is check for side
     Hint: use can_reach
     '''
+    # this method checks if the side used in the argument has check over the other side
+    # i.e if False is used in the argument and Black has white in check then true is returned.
     king_x = 0
     king_y = 0
     for i in range(0, len(B[1])):
         if type(B[1][i]) == King and B[1][i].side != side:
             king_x = B[1][i].pos_X
             king_y = B[1][i].pos_Y
-    print("False King ", king_x, king_y)
+    #print("False King ", king_x, king_y)
 
     for j in range(0, len(B[1])):
         if B[1][j].side == side:
-            print(B[1][j].pos_X, B[1][j].pos_Y, B[1][i].side)
+            #print(B[1][j].pos_X, B[1][j].pos_Y, B[1][i].side)
             if B[1][j].can_reach(king_x, king_y, B):
                 return True
     return False
@@ -287,8 +287,21 @@ def is_checkmate(side: bool, B: Board) -> bool:
 
     Hints:
     - use is_check
-    - use can_reach
+    - use can_reach - NOTE: THIS HINT IS WRONG IT SHOULD BE USE "can_move_to" as that checks if move results in check.
     '''
+    # this method is written such that True is returned if the the side entered in as the argument has the opposition in check mate
+    # i.e. if False is used in the argument and Black has checkmate then True is returned.
+    king_X = 0
+    king_Y = 0
+
+    if is_check(side, B):
+        print(side)
+        for i in range(0, len(B[1])):
+            if type(B[1][i]) == King and B[1][i].side != side:
+                print("Yes")
+                king_X = B[1][i].pos_X
+                king_Y = B[1][i].pos_Y
+            print(king_X, king_Y)
 
 
 def is_stalemate(side: bool, B: Board) -> bool:
@@ -447,15 +460,6 @@ if __name__ == '__main__':  # keep this in
 
 
 
-conf2unicode(read_board("board_examp.txt"))
-#wr2 = Rook(2, 5, True)
-#wr2.can_move_to(1, 5, (read_board("board_examp2.txt")))
-#conf2unicode(read_board("board_examp2.txt"))
-#wb1 = Bishop(1, 1, True)
-#wb2 = Bishop(5, 2, True)
-#wb1.can_reach(2, 2, read_board("board_examp.txt"))
-#wb1.can_reach(3, 3, read_board("board_examp.txt"))
-#save_board("test.txt", read_board("board_examp.txt"))
 wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)
@@ -468,22 +472,22 @@ wr2 = Rook(1, 5, True)
 wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
+B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
+B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
+conf2unicode(B1)
+conf2unicode(B2)
 
-#B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
-#conf2unicode(B2)
-#wr3b = Rook(5, 1, True)
-#B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
-#conf2unicode(B3)
-#br2b = Bishop(1, 4, False)
-#B4 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
-#conf2unicode(B4)
+wr2a.can_move_to(2, 4, B2)
+wr2a.can_move_to(1, 5, B2)
+wr2a.can_move_to(3, 5, B2)
+wr1.can_move_to(5, 2, B2)
+wr1.can_move_to(4, 2, B2)
+bk.can_move_to(1, 2, B1)
+bk.can_move_to(2, 4, B1)
+bk.can_move_to(3, 4, B1)
+wk.can_move_to(2, 5, B2)
 
-#wb1.can_reach(2, 2, read_board(("board_examp.txt")))
-#wb1.can_reach(3, 3, read_board(("board_examp.txt")))
-#wb1.can_reach(3, 3, read_board(("board_examp.txt")))
-wb4 = Bishop(2, 2, True)
-B5 = (5, [wb1, wr1, wb4, bk, br1, br2, br3, wr2, wk])
-wb1.can_reach(3, 3, B5)
+
 
 
 
