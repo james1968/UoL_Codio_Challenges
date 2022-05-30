@@ -1,4 +1,5 @@
 from typing import *
+import copy
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # tuple called coords to hold co-ordinates in x,y format
@@ -144,9 +145,8 @@ class Rook(Piece):
         '''
 
         # needs to be updated to capture the piece and check if the move results in check
-        temp_board_list = B[1]
-        print("Current Board")
-        conf2unicode(B)
+        size = B[0]
+        print(size)
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
@@ -157,7 +157,7 @@ class Rook(Piece):
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     new_list_pieces.remove(i)
             new_list_pieces.append(moved_piece)
-            new_board = (B[0], new_list_pieces)
+            new_board = (size, new_list_pieces)
             conf2unicode(new_board)
             if is_check(check_side, new_board):
                 return False
@@ -257,14 +257,32 @@ class King(Piece):
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
         # needs to be updated to capture the piece and check if the move results in check
+        k_size = B[0]
+        if self.can_reach(pos_X, pos_Y, B) == False:
+            return False
+
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            return True
-        elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
-            cap_piece = piece_at(pos_X, pos_Y,B)
+            k_move_piece = type(self)(pos_X, pos_Y, self.side)
+            k_check_side = not self.side
+            k_new_list = copy.deepcopy(B[1])
+            for i in k_new_list:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    k_new_list.remove(i)
+            k_new_list.append(k_move_piece)
+            temp_board = (B[0], k_new_list)
+            conf2unicode(temp_board)
+            if is_check(k_check_side, temp_board):
+                print("False")
+                return False
+            else:
+                return True
+
+
+        if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
+            cap_piece = piece_at(pos_X, pos_Y, B)
             return True
         else:
             return False
-
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -490,19 +508,15 @@ wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
 br2b = Rook(2, 4, False)
-#B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
+B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br2b, wr2a, wk])
+print("Board 2")
 conf2unicode(B2)
-#br2.can_move_to(1, 4, B2)
-#wr2a.can_move_to(2, 4, B2)
-#wr2a.can_move_to(1, 5, B2)
-#wr2a.can_move_to(3, 5, B2)
-#wr1.can_move_to(5, 2, B2)
-#wr1.can_move_to(4, 2, B2)
-#bk.can_move_to(1, 2, B1)
-#bk.can_move_to(2, 4, B1)
-#bk.can_move_to(3, 4, B1)
-#wk.can_move_to(2, 5, B2)
+print("------")
+print("Board 1")
+conf2unicode(B1)
+bk.can_move_to(3, 4, B1)
+
 
 
 

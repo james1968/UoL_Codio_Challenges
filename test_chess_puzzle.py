@@ -111,7 +111,7 @@ def test_can_move_to1():
     assert wr1.can_move_to(4, 2, B2) == True
     assert bk.can_move_to(1, 2, B1) == True
     assert bk.can_move_to(2, 4, B1) == False
-    assert bk.can_move_to(3, 4, B1) == True
+    assert bk.can_move_to(3, 4, B1) == False
     B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk])
     assert wk.can_move_to(2, 5, B3) == False
     assert br2.can_move_to(1, 4, B2) == False
