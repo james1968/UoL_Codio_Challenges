@@ -145,6 +145,8 @@ def test_is_checkmate1():
     br2b = Rook(4, 5, False)
     B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
     assert is_checkmate(True, B2) == True
+    assert is_checkmate(False, B2) == False
+
 
 
 def test_read_board1():

@@ -302,7 +302,6 @@ class King(Piece):
             k_new_list.append(k_move_piece)
             k_temp_board = (B[0], k_new_list)
             if is_check(k_check_side, k_temp_board):
-                print("False1")
                 return False
             else:
                 return True
@@ -321,7 +320,6 @@ class King(Piece):
             k_new_list.append(k_move_piece)
             k_temp_board = (B[0], k_new_list)
             if is_check(k_check_side, k_temp_board):
-                print("False2")
                 return False
             else:
                 return True
@@ -346,11 +344,9 @@ def is_check(side: bool, B: Board) -> bool:
         if type(B[1][i]) == King and B[1][i].side != side:
             king_x = B[1][i].pos_X
             king_y = B[1][i].pos_Y
-    #print("False King ", king_x, king_y)
 
     for j in range(0, len(B[1])):
         if B[1][j].side == side:
-            #print(B[1][j].pos_X, B[1][j].pos_Y, B[1][i].side)
             if B[1][j].can_reach(king_x, king_y, B):
                 return True
     return False
@@ -368,15 +364,25 @@ def is_checkmate(side: bool, B: Board) -> bool:
     king_X = 0
     king_Y = 0
 
-    if is_check(side, B):
-        print(side)
-        for i in range(0, len(B[1])):
-            if type(B[1][i]) == King and B[1][i].side != side:
-                print("Yes")
-                king_X = B[1][i].pos_X
-                king_Y = B[1][i].pos_Y
-            print(king_X, king_Y)
+    check_side = not side
+    print(check_side)
 
+    if is_check(check_side, B):
+        print("Side that has check: ", check_side)
+        for i in B[1]:
+            if type(i) == King and i.side == side:
+                king = type(i)(i.pos_X, i.pos_Y, side)
+                print(king.pos_X, king.pos_Y)
+        for j in range(1, B[0]+1):
+            for k in range(1, B[0]+1):
+                if king.can_move_to(j, k, B):
+                    print("False")
+                    return False
+        print("True")
+        return True
+    else:
+        print("False")
+        return False
 
 def is_stalemate(side: bool, B: Board) -> bool:
     '''
@@ -549,25 +555,30 @@ wr2 = Rook(1, 5, True)
 wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
-br2b = Rook(2, 4, False)
+br2b = Rook(4, 5, False)
 bb1 = Bishop(2, 4, False)
 wr3 = Rook(3, 3, True)
+wr3b = Rook(5, 1, True)
 B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
-B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br2b, wr2a, wk])
-B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, bb1, wr2a, wk])
+B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
+B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
 print("Board 2")
 conf2unicode(B2)
 print("------")
-print("Board 1")
-conf2unicode(B1)
-print("------")
-print("Board 3")
-conf2unicode(B3)
-print("------")
-print("Board 4")
-conf2unicode(B4)
-wb1.can_move_to(2, 1, B1)
+#print("Board 1")
+#conf2unicode(B1)
+#print("------")
+#print("Board 3")
+#conf2unicode(B3)
+#print("------")
+#print("Board 4")
+#conf2unicode(B4)
+
+is_checkmate(True, B2)
+#true
+is_checkmate(False, B2)
+#false
 
 
 
