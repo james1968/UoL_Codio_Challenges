@@ -115,7 +115,14 @@ def test_can_move_to1():
     B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk])
     assert wk.can_move_to(2, 5, B3) == False
     assert br2.can_move_to(1, 4, B2) == False
-
+    bb1 = Bishop(2, 4, False)
+    B4 = (5, [wb1, wr1, wb2, bk, br1, br2a, bb1, wr2a, wk])
+    assert bb1.can_move_to(1, 3, B4) == False
+    wr3 = Rook(3, 3, True)
+    B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
+    assert bb1.can_move_to(3, 3, B4) == False
+    assert wb1.can_move_to(2, 2, B1) == True
+    assert wb1.can_move_to(2, 1, B1) == False
 
 
 def test_is_check1():

@@ -144,39 +144,35 @@ class Rook(Piece):
         - finally, to check [Rule5], use is_check on new board
         '''
 
-        # needs to be updated to capture the piece and check if the move results in check
         size = B[0]
-        print(size)
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            moved_piece = type(self)(pos_X, pos_Y, self.side)
-            check_side = not self.side
-            new_list_pieces = B[1]
-            for i in new_list_pieces:
+            r_moved_piece = type(self)(pos_X, pos_Y, self.side)
+            r_check_side = not self.side
+            r_new_list_pieces = B[1]
+            for i in r_new_list_pieces:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
-                    new_list_pieces.remove(i)
-            new_list_pieces.append(moved_piece)
-            new_board = (size, new_list_pieces)
-            conf2unicode(new_board)
-            if is_check(check_side, new_board):
+                    r_new_list_pieces.remove(i)
+            r_new_list_pieces.append(r_moved_piece)
+            r_temp_board = (size, r_new_list_pieces)
+            if is_check(r_check_side, r_temp_board):
                 return False
             else:
                 return True
 
         if self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
-            cap_piece = piece_at(pos_X, pos_Y, B)
-            side_check = cap_piece.side
-            moved_piece = type(self)(pos_X, pos_Y, self.side)
-            new_list_pieces = B[1]
-            new_list_pieces.remove(cap_piece)
-            for i in new_list_pieces:
+            r_cap_piece = piece_at(pos_X, pos_Y, B)
+            r_side_check = r_cap_piece.side
+            r_moved_piece = type(self)(pos_X, pos_Y, self.side)
+            r_new_list_pieces = B[1]
+            r_new_list_pieces.remove(r_cap_piece)
+            for i in r_new_list_pieces:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
-                    new_list_pieces.remove(i)
-            new_list_pieces.append(moved_piece)
-            new_board = (B[0], new_list_pieces)
-            conf2unicode(new_board)
-            if is_check(side_check, new_board):
+                    r_new_list_pieces.remove(i)
+            r_new_list_pieces.append(r_moved_piece)
+            r_temp_board = (B[0], r_new_list_pieces)
+            if is_check(r_side_check, r_temp_board):
                 return False
             else:
                 return True
@@ -195,7 +191,6 @@ class Bishop(Piece):
 
     def can_reach(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to rule [Rule1] and [Rule4]'''
-        # needs to be updated for when there is a same colour piece on the diagonal
         if ((self.pos_X - pos_X) - (self.pos_Y - pos_Y)) == 0:
             if not is_piece_at(pos_X, pos_Y, B) or piece_at(pos_X, pos_Y, B).side != self.side:
                 if pos_X > self.pos_X and pos_Y > self.pos_Y:
@@ -226,6 +221,42 @@ class Bishop(Piece):
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
+        if self.can_reach(pos_X, pos_Y, B) == False:
+            return False
+
+        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
+            b_move_piece = type(self)(pos_X, pos_Y, self.side)
+            b_check_side = not self.side
+            b_new_list = copy.deepcopy(B[1])
+            for i in b_new_list:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    b_new_list.remove(i)
+            b_new_list.append(b_move_piece)
+            b_temp_board = (B[0], b_new_list)
+            if is_check(b_check_side, b_temp_board):
+                print("False1")
+                return False
+            else:
+                return True
+
+
+        if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
+            b_cap_piece = piece_at(pos_X, pos_Y, B)
+            b_move_piece = type(self)(pos_X, pos_Y, self.side)
+            b_check_side = not self.side
+            b_new_list = copy.deepcopy(B[1])
+            for i in b_new_list:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    b_new_list.remove(i)
+                if i.pos_X == b_cap_piece.pos_X and i.pos_Y == b_cap_piece.pos_Y and type(i) == type(b_cap_piece) and i.side == b_cap_piece.side:
+                    b_new_list.remove(i)
+            b_new_list.append(b_move_piece)
+            b_temp_board = (B[0], b_new_list)
+            if is_check(b_check_side, b_temp_board):
+                print("False2")
+                return False
+            else:
+                return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -269,10 +300,9 @@ class King(Piece):
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     k_new_list.remove(i)
             k_new_list.append(k_move_piece)
-            temp_board = (B[0], k_new_list)
-            conf2unicode(temp_board)
-            if is_check(k_check_side, temp_board):
-                print("False")
+            k_temp_board = (B[0], k_new_list)
+            if is_check(k_check_side, k_temp_board):
+                print("False1")
                 return False
             else:
                 return True
@@ -289,10 +319,9 @@ class King(Piece):
                 if i.pos_X == k_cap_piece.pos_X and i.pos_Y == k_cap_piece.pos_Y and type(i) == type(k_cap_piece) and i.side == k_cap_piece.side:
                     k_new_list.remove(i)
             k_new_list.append(k_move_piece)
-            temp_board = (B[0], k_new_list)
-            conf2unicode(temp_board)
-            if is_check(k_check_side, temp_board):
-                print("False")
+            k_temp_board = (B[0], k_new_list)
+            if is_check(k_check_side, k_temp_board):
+                print("False2")
                 return False
             else:
                 return True
@@ -521,15 +550,24 @@ wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
 br2b = Rook(2, 4, False)
+bb1 = Bishop(2, 4, False)
+wr3 = Rook(3, 3, True)
 B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br2b, wr2a, wk])
+B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, bb1, wr2a, wk])
+B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
 print("Board 2")
 conf2unicode(B2)
 print("------")
 print("Board 1")
 conf2unicode(B1)
-bk.can_move_to(3, 4, B1)
-
+print("------")
+print("Board 3")
+conf2unicode(B3)
+print("------")
+print("Board 4")
+conf2unicode(B4)
+wb1.can_move_to(2, 1, B1)
 
 
 
