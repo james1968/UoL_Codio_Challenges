@@ -279,10 +279,23 @@ class King(Piece):
 
 
         if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
-            cap_piece = piece_at(pos_X, pos_Y, B)
-            return True
-        else:
-            return False
+            k_cap_piece = piece_at(pos_X, pos_Y, B)
+            k_move_piece = type(self)(pos_X, pos_Y, self.side)
+            k_check_side = not self.side
+            k_new_list = copy.deepcopy(B[1])
+            for i in k_new_list:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    k_new_list.remove(i)
+                if i.pos_X == k_cap_piece.pos_X and i.pos_Y == k_cap_piece.pos_Y and type(i) == type(k_cap_piece) and i.side == k_cap_piece.side:
+                    k_new_list.remove(i)
+            k_new_list.append(k_move_piece)
+            temp_board = (B[0], k_new_list)
+            conf2unicode(temp_board)
+            if is_check(k_check_side, temp_board):
+                print("False")
+                return False
+            else:
+                return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
