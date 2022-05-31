@@ -365,7 +365,6 @@ def is_checkmate(side: bool, B: Board) -> bool:
     king_Y = 0
 
     check_side = not side
-    print(check_side)
 
     if is_check(check_side, B):
         print("Side that has check: ", check_side)
@@ -564,7 +563,7 @@ B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
 print("Board 2")
-conf2unicode(B2)
+conf2unicode(B3)
 print("------")
 #print("Board 1")
 #conf2unicode(B1)
@@ -575,9 +574,9 @@ print("------")
 #print("Board 4")
 #conf2unicode(B4)
 
-is_checkmate(True, B2)
+is_checkmate(True, B3)
 #true
-is_checkmate(False, B2)
+is_checkmate(False, B3)
 #false
 
 
