@@ -181,6 +181,22 @@ class Rook(Piece):
         returns new board resulting from move of this rook to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
+        if self.can_move_to(pos_X, pos_Y, B) == False:
+            print("This piece can't move to that square.")
+        r_new_piece: Piece = Rook(pos_X, pos_Y, self.side)
+        r_new_board_pieces = copy.deepcopy(B[1])
+        r_cap_piece = piece_at(pos_X, pos_Y, B)
+        if self.can_move_to(pos_X, pos_Y, B):
+            for i in r_new_board_pieces:
+                if type(i) == type(self) and i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and i.side == self.side:
+                    r_new_board_pieces.remove(i)
+                if r_cap_piece:
+                    if type(i) == type(r_cap_piece) and i.pos_X == r_cap_piece.pos_X and i.pos_Y == r_cap_piece.pos_Y and i.side == r_cap_piece.side:
+                        r_new_board_pieces.remove(i)
+
+        r_new_board_pieces.append(r_new_piece)
+        r_new_board: Board = (B[0], r_new_board_pieces)
+        return r_new_board
 
 
 class Bishop(Piece):
@@ -195,13 +211,13 @@ class Bishop(Piece):
                 if pos_X > self.pos_X and pos_Y > self.pos_Y:
                     for i in range(1, pos_X):
                         if is_piece_at(self.pos_X+i, self.pos_Y+i, B) and piece_at(self.pos_X+i, self.pos_Y+i, B).side == self.side:
-                            print("False")
                             return False
                     return True
                 if pos_X < self.pos_X and pos_Y < self.pos_Y:
                     for i in range(1, self.pos_X):
                         if is_piece_at(self.pos_X-i, self.pos_Y-i, B) and piece_at(self.pos_X-i, self.pos_Y-i, B) == self.side:
                             return False
+                    print("so shit")
                     return True
 
         if ((self.pos_X - pos_X) + (self.pos_Y - pos_Y)) == 0:
@@ -233,11 +249,9 @@ class Bishop(Piece):
             b_new_list.append(b_move_piece)
             b_temp_board: Board = (B[0], b_new_list)
             if is_check(b_check_side, b_temp_board):
-                print("False1")
                 return False
             else:
                 return True
-
 
         if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
             b_cap_piece: Piece = piece_at(pos_X, pos_Y, B)
@@ -262,6 +276,23 @@ class Bishop(Piece):
         returns new board resulting from move of this bishop to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
+        if self.can_move_to(pos_X, pos_Y, B) == False:
+            print("This piece can't move to that square.")
+        b_new_piece: Piece = Bishop(pos_X, pos_Y, self.side)
+        b_new_board_pieces = copy.deepcopy(B[1])
+        b_cap_piece = piece_at(pos_X, pos_Y, B)
+        if self.can_move_to(pos_X, pos_Y, B):
+            for i in b_new_board_pieces:
+                if type(i) == type(self) and i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and i.side == self.side:
+                    print("poo")
+                    b_new_board_pieces.remove(i)
+                if b_cap_piece:
+                    if type(i) == type(b_cap_piece) and i.pos_X == b_cap_piece.pos_X and i.pos_Y == b_cap_piece.pos_Y and i.side == b_cap_piece.side:
+                        b_new_board_pieces.remove(i)
+
+        b_new_board_pieces.append(b_new_piece)
+        b_new_board: Board = (B[0], b_new_board_pieces)
+        return b_new_board
 
 
 class King(Piece):
@@ -544,11 +575,12 @@ wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)
 wb2 = Bishop(5, 2, True)
-bk = King(2, 3, False)
+bk = King(3, 3, False)
 br1 = Rook(4, 3, False)
 br2 = Rook(2, 4, False)
 br3 = Rook(5, 4, False)
 wr2 = Rook(1, 5, True)
+wr2c = Rook(1, 4, True)
 wk = King(3, 5, True)
 br2a = Rook(1, 5, False)
 wr2a = Rook(2, 5, True)
@@ -556,13 +588,10 @@ br2b = Rook(4, 5, False)
 bb1 = Bishop(2, 4, False)
 wr3 = Rook(3, 3, True)
 wr3b = Rook(5, 1, True)
-B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
+B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2c, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
-print("Board 2")
-conf2unicode(B3)
-print("------")
 #print("Board 1")
 #conf2unicode(B1)
 #print("------")
@@ -571,11 +600,13 @@ print("------")
 #print("------")
 #print("Board 4")
 #conf2unicode(B4)
+#conf2unicode(B1)
+#wr2.move_to(2, 3, B1)
+#conf2unicode(B1)
+conf2unicode(B1)
+conf2unicode(wb2.move_to(3, 3, B1))
 
-is_checkmate(True, B3)
-#true
-is_checkmate(False, B3)
-#false
+
 
 
 

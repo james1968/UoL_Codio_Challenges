@@ -148,6 +148,8 @@ def test_is_checkmate1():
     assert is_checkmate(False, B2) == False
     assert is_checkmate(True, B1) == False
     assert is_checkmate(True, B1) == False
+    wr3b = Rook(5, 1, True)
+    B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
     assert is_checkmate(False, B3) == False
     assert is_checkmate(True, B3) == True
 
