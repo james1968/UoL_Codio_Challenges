@@ -185,4 +185,3 @@ def test_read_board1():
 
 def test_conf2unicode1():
     assert conf2unicode(B1) == "♖ ♔  \n ♜  ♜\n ♚ ♜ \n♖   ♗\n♗    "
-

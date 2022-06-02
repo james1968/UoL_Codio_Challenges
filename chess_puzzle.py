@@ -186,6 +186,7 @@ class Rook(Piece):
         r_new_piece: Piece = Rook(pos_X, pos_Y, self.side)
         r_new_board_pieces = copy.deepcopy(B[1])
         r_cap_piece = piece_at(pos_X, pos_Y, B)
+        r_new_board: Board = (B[0], r_new_board_pieces)
         if self.can_move_to(pos_X, pos_Y, B):
             for i in r_new_board_pieces:
                 if type(i) == type(self) and i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and i.side == self.side:
@@ -194,8 +195,8 @@ class Rook(Piece):
                     if type(i) == type(r_cap_piece) and i.pos_X == r_cap_piece.pos_X and i.pos_Y == r_cap_piece.pos_Y and i.side == r_cap_piece.side:
                         r_new_board_pieces.remove(i)
 
-        r_new_board_pieces.append(r_new_piece)
-        r_new_board: Board = (B[0], r_new_board_pieces)
+            r_new_board_pieces.append(r_new_piece)
+
         return r_new_board
 
 
@@ -266,7 +267,6 @@ class Bishop(Piece):
             b_new_list.append(b_move_piece)
             b_temp_board: Board = (B[0], b_new_list)
             if is_check(b_check_side, b_temp_board):
-                print("False2")
                 return False
             else:
                 return True
@@ -281,17 +281,17 @@ class Bishop(Piece):
         b_new_piece: Piece = Bishop(pos_X, pos_Y, self.side)
         b_new_board_pieces = copy.deepcopy(B[1])
         b_cap_piece = piece_at(pos_X, pos_Y, B)
+        b_new_board: Board = (B[0], b_new_board_pieces)
         if self.can_move_to(pos_X, pos_Y, B):
             for i in b_new_board_pieces:
                 if type(i) == type(self) and i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and i.side == self.side:
-                    print("poo")
                     b_new_board_pieces.remove(i)
                 if b_cap_piece:
                     if type(i) == type(b_cap_piece) and i.pos_X == b_cap_piece.pos_X and i.pos_Y == b_cap_piece.pos_Y and i.side == b_cap_piece.side:
                         b_new_board_pieces.remove(i)
 
-        b_new_board_pieces.append(b_new_piece)
-        b_new_board: Board = (B[0], b_new_board_pieces)
+            b_new_board_pieces.append(b_new_piece)
+
         return b_new_board
 
 
@@ -358,7 +358,23 @@ class King(Piece):
         returns new board resulting from move of this king to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
+        if self.can_move_to(pos_X, pos_Y, B) == False:
+            print("This piece can't move to that square.")
+        k_new_piece: Piece = King(pos_X, pos_Y, self.side)
+        k_new_board_pieces = copy.deepcopy(B[1])
+        k_cap_piece = piece_at(pos_X, pos_Y, B)
+        k_new_board: Board = (B[0], k_new_board_pieces)
+        if self.can_move_to(pos_X, pos_Y, B):
+            for i in k_new_board_pieces:
+                if type(i) == type(self) and i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and i.side == self.side:
+                    k_new_board_pieces.remove(i)
+                if k_cap_piece:
+                    if type(i) == type(k_cap_piece) and i.pos_X == k_cap_piece.pos_X and i.pos_Y == k_cap_piece.pos_Y and i.side == k_cap_piece.side:
+                        k_new_board_pieces.remove(i)
 
+            k_new_board_pieces.append(k_new_piece)
+
+        return k_new_board
 
 def is_check(side: bool, B: Board) -> bool:
     '''
@@ -604,7 +620,7 @@ B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
 #wr2.move_to(2, 3, B1)
 #conf2unicode(B1)
 conf2unicode(B1)
-conf2unicode(wb2.move_to(3, 3, B1))
+conf2unicode(wb1.move_to(4, 4, B1))
 
 
 
