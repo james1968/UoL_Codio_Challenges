@@ -218,7 +218,6 @@ class Bishop(Piece):
                     for i in range(1, self.pos_X):
                         if is_piece_at(self.pos_X-i, self.pos_Y-i, B) and piece_at(self.pos_X-i, self.pos_Y-i, B) == self.side:
                             return False
-                    print("so shit")
                     return True
 
         if ((self.pos_X - pos_X) + (self.pos_Y - pos_Y)) == 0:
@@ -442,53 +441,55 @@ def read_board(filename: str) -> Board:
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
-    Board1: Board = tuple()
-    Board_arr: List[int, str] = []
+    board_play: Board = tuple()
+    board_arr: List[int, str] = []
     board: List[str] = []
     run: bool = True
+    bold_start = "\033[1m"
+    bold_end = "\033[0;0m"
     while run == True:
         try:
             infile = open(filename, "r")
             lines = infile.readlines()
             if len(lines) != 3:
                 infile.close()
-                filename = input("This is not a valid file. File name for initial configuration: ")
+                filename = input("This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
         except IOError:
-            filename = input("This is not a valid file. File name for initial configuration: ")
+            filename = input("This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
         else:
             infile = open(filename, "r")
             line = infile.readline()
             while line != "":
                 board.append(line.rstrip())
                 line = infile.readline()
-            Board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
+            board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
             run = False
-    Board1 += (Board_arr[0], )
+    board_play += (board_arr[0], )
     pieces_arr: List[Piece] = []
     for i in range(1, 3):
         if i == 1:
-            for j in range(0, len(Board_arr[i])):
-                Board_arr[i][j] = Board_arr[i][j].strip()
-                xy_loc = location2index(Board_arr[i][j][1:])
-                if Board_arr[i][j][0] == "B":
+            for j in range(0, len(board_arr[i])):
+                board_arr[i][j] = board_arr[i][j].strip()
+                xy_loc = location2index(board_arr[i][j][1:])
+                if board_arr[i][j][0] == "B":
                     pieces_arr.append(Bishop(xy_loc[0], xy_loc[1], True))
-                if Board_arr[i][j][0] == "R":
+                if board_arr[i][j][0] == "R":
                     pieces_arr.append(Rook(xy_loc[0], xy_loc[1], True))
-                if Board_arr[i][j][0] == "K":
+                if board_arr[i][j][0] == "K":
                     pieces_arr.append(King(xy_loc[0], xy_loc[1], True))
         if i == 2:
-            for j in range(0, len(Board_arr[i])):
-                Board_arr[i][j] = Board_arr[i][j].strip()
-                xy_loc = location2index(Board_arr[i][j][1:])
-                if Board_arr[i][j][0] == "B":
+            for j in range(0, len(board_arr[i])):
+                board_arr[i][j] = board_arr[i][j].strip()
+                xy_loc = location2index(board_arr[i][j][1:])
+                if board_arr[i][j][0] == "B":
                     pieces_arr.append(Bishop(xy_loc[0], xy_loc[1], False))
-                if Board_arr[i][j][0] == "R":
+                if board_arr[i][j][0] == "R":
                     pieces_arr.append(Rook(xy_loc[0], xy_loc[1], False))
-                if Board_arr[i][j][0] == "K":
+                if board_arr[i][j][0] == "K":
                     pieces_arr.append(King(xy_loc[0], xy_loc[1], False))
-            Board1 += (pieces_arr,)
+            board_play += (pieces_arr,)
 
-    return Board1
+    return board_play
 
 
 def save_board(filename: str, B: Board) -> None:
@@ -579,9 +580,41 @@ def main() -> None:
     filename = input("File name for initial configuration: ")
     ...
     '''
+    bold_start = "\033[1m"
+    bold_end = "\033[0;0m"
+    blue_text = '\033[96m'
+    blue_text_end =  '\033[0:0m'
+    #filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
+    board_in_play: Board = read_board("board_examp.txt")
+    print("The initial " +bold_start + "configuration is: " + bold_end)
+    conf2unicode(read_board("board_examp.txt"))
+    white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
+    white_piece_move_from: Tuple(int) = location2index(white_move[:2])
+    white_piece_move_to: Tuple(int) = location2index(white_move[2:])
+    white_to_X: int = white_piece_move_to[0]
+    white_to_Y: int = white_piece_move_to[1]
+    white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+    print(white_piece.pos_X, white_piece.pos_Y)
+    white_input: bool = True
+    if white_move == "QUIT":
+        filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
+        save_board(filename_store, board_in_play)
+        print("The game configuration saved.")
+    while white_input == True:
+        if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+            white_move = input("This " + bold_start +  "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White:")
+            white_piece_move_from: Tuple(int) = location2index(white_move[:2])
+            white_piece_move_to: Tuple(int) = location2index(white_move[2:])
+            white_to_X: int = white_piece_move_to[0]
+            white_to_Y: int = white_piece_move_to[1]
+            white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+        else:
+            white_input = False
 
-    #filename = input("File name for initial configuration: ")
-    read_board("board_examp2.txt")
+    if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+        board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
+        print("The " + bold_start + "configuration after " + bold_end +  "White's move is: ")
+        conf2unicode(board_in_play)
 
 if __name__ == '__main__':  # keep this in
     main()
@@ -608,19 +641,6 @@ B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2c, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
-#print("Board 1")
-#conf2unicode(B1)
-#print("------")
-#print("Board 3")
-#conf2unicode(B3)
-#print("------")
-#print("Board 4")
-#conf2unicode(B4)
-#conf2unicode(B1)
-#wr2.move_to(2, 3, B1)
-#conf2unicode(B1)
-conf2unicode(B1)
-conf2unicode(wb1.move_to(4, 4, B1))
 
 
 
