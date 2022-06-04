@@ -584,8 +584,8 @@ def main() -> None:
     bold_end = "\033[0;0m"
     blue_text = '\033[96m'
     blue_text_end =  '\033[0:0m'
-    #filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
-    board_in_play: Board = read_board("board_examp.txt")
+    filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
+    board_in_play: Board = copy.deepcopy(read_board(filename))
     print("The initial " +bold_start + "configuration is: " + bold_end)
     conf2unicode(read_board("board_examp.txt"))
     white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
@@ -594,7 +594,7 @@ def main() -> None:
     white_to_X: int = white_piece_move_to[0]
     white_to_Y: int = white_piece_move_to[1]
     white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
-    print(white_piece.pos_X, white_piece.pos_Y)
+    print(white_piece.pos_X, white_piece.pos_Y, type(white_piece), white_piece.side)
     white_input: bool = True
     if white_move == "QUIT":
         filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
@@ -602,7 +602,7 @@ def main() -> None:
         print("The game configuration saved.")
     while white_input == True:
         if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-            white_move = input("This " + bold_start +  "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White:")
+            white_move = input("This " + bold_start +  "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
             white_piece_move_from: Tuple(int) = location2index(white_move[:2])
             white_piece_move_to: Tuple(int) = location2index(white_move[2:])
             white_to_X: int = white_piece_move_to[0]
@@ -610,8 +610,9 @@ def main() -> None:
             white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
         else:
             white_input = False
-
+    conf2unicode(board_in_play)
     if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+        print("shit2")
         board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
         print("The " + bold_start + "configuration after " + bold_end +  "White's move is: ")
         conf2unicode(board_in_play)
@@ -641,6 +642,7 @@ B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2c, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
+#print(wr1.can_move_to(1, 3, B1))
 
 
 
