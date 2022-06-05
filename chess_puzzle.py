@@ -1,5 +1,7 @@
 from typing import *
 import copy
+import random
+
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # tuple called coords to hold co-ordinates in x,y format
@@ -181,8 +183,6 @@ class Rook(Piece):
         returns new board resulting from move of this rook to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
-        if self.can_move_to(pos_X, pos_Y, B) == False:
-            print("This piece can't move to that square.")
         r_new_piece: Piece = Rook(pos_X, pos_Y, self.side)
         r_new_board_pieces = copy.deepcopy(B[1])
         r_cap_piece = piece_at(pos_X, pos_Y, B)
@@ -275,8 +275,6 @@ class Bishop(Piece):
         returns new board resulting from move of this bishop to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
-        if self.can_move_to(pos_X, pos_Y, B) == False:
-            print("This piece can't move to that square.")
         b_new_piece: Piece = Bishop(pos_X, pos_Y, self.side)
         b_new_board_pieces = copy.deepcopy(B[1])
         b_cap_piece = piece_at(pos_X, pos_Y, B)
@@ -357,8 +355,6 @@ class King(Piece):
         returns new board resulting from move of this king to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
-        if self.can_move_to(pos_X, pos_Y, B) == False:
-            print("This piece can't move to that square.")
         k_new_piece: Piece = King(pos_X, pos_Y, self.side)
         k_new_board_pieces = copy.deepcopy(B[1])
         k_cap_piece = piece_at(pos_X, pos_Y, B)
@@ -384,14 +380,14 @@ def is_check(side: bool, B: Board) -> bool:
     # i.e if False is used in the argument and Black has white in check then true is returned.
     king_x: int = 0
     king_y: int = 0
-    for i in range(0, len(B[1])):
-        if type(B[1][i]) == King and B[1][i].side != side:
-            king_x = B[1][i].pos_X
-            king_y = B[1][i].pos_Y
+    for i in B[1]:
+        if type(i) == King and i.side != side:
+            king_x = i.pos_X
+            king_y = i.pos_Y
 
-    for j in range(0, len(B[1])):
-        if B[1][j].side == side:
-            if B[1][j].can_reach(king_x, king_y, B):
+    for j in B[1]:
+        if j.side == side:
+            if j.can_reach(king_x, king_y, B):
                 return True
     return False
 
@@ -403,8 +399,6 @@ def is_checkmate(side: bool, B: Board) -> bool:
     - use is_check
     - use can_reach - NOTE: THIS HINT IS WRONG IT SHOULD BE USE "can_move_to" as that checks if move results in check.
     '''
-    # this method is written such that True is returned if the the side entered in as the argument has the opposition in check mate
-    # i.e. if False is used in the argument and Black has checkmate then True is returned.
     king_X: int = 0
     king_Y: int = 0
 
@@ -419,12 +413,9 @@ def is_checkmate(side: bool, B: Board) -> bool:
         for j in range(1, B[0]+1):
             for k in range(1, B[0]+1):
                 if king.can_move_to(j, k, B):
-                    print("False")
                     return False
-        print("True")
         return True
     else:
-        print("False")
         return False
 
 def is_stalemate(side: bool, B: Board) -> bool:
@@ -530,6 +521,36 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
     - use methods of random library
     - use can_move_to
     '''
+    bold_start = "\033[1m"
+    bold_end = "\033[0;0m"
+    board_length: int = B[0]
+    black_pieces: List[Piece] = []
+    for i in B[1]:
+        if not i.side:
+            black_pieces.append(i)
+    poss_moves: List[Tuple] = []
+    for i in range(0, B[0]):
+        for j in range(0, B[0]):
+            moves = (i, j)
+            poss_moves.append(moves)
+
+    piece_to_move = random.choice(black_pieces)
+    orig_black_X = piece_to_move.pos_X
+    orig_black_Y = piece_to_move.pos_Y
+
+    for k in poss_moves:
+        if piece_to_move.can_move_to(k[0], k[1], B):
+            piece_to_move.move_to(k[0], k[1], B)
+            black_loc: str = index2location(k[0], k[1])
+            black_orig_loc: str = index2location(orig_black_X, orig_black_Y)
+            print(bold_start + "Next " + bold_end +  "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc+black_loc}. The " + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
+            conf2unicode(B)
+            break
+        else:
+            pass
+
+
+
 
 
 def conf2unicode(B: Board) -> str:
@@ -583,10 +604,10 @@ def main() -> None:
     bold_start = "\033[1m"
     bold_end = "\033[0;0m"
     blue_text = '\033[96m'
-    blue_text_end =  '\033[0:0m'
+    blue_text_end = '\033[0:0m'
     filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
     board_in_play: Board = copy.deepcopy(read_board(filename))
-    print("The initial " +bold_start + "configuration is: " + bold_end)
+    print("The initial " + bold_start + "configuration is: " + bold_end)
     conf2unicode(read_board("board_examp.txt"))
     white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
     white_piece_move_from: Tuple(int) = location2index(white_move[:2])
@@ -602,7 +623,8 @@ def main() -> None:
         print("The game configuration saved.")
     while white_input == True:
         if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-            white_move = input("This " + bold_start +  "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
+            white_move = input(
+                "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
             white_piece_move_from: Tuple(int) = location2index(white_move[:2])
             white_piece_move_to: Tuple(int) = location2index(white_move[2:])
             white_to_X: int = white_piece_move_to[0]
@@ -612,10 +634,15 @@ def main() -> None:
             white_input = False
     conf2unicode(board_in_play)
     if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-        print("shit2")
         board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
-        print("The " + bold_start + "configuration after " + bold_end +  "White's move is: ")
+        print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
         conf2unicode(board_in_play)
+
+    if is_checkmate(False, board_in_play):
+        print("Game " + bold_start + "over. " + bold_end + "White wins.")
+
+    find_black_move(board_in_play)
+
 
 if __name__ == '__main__':  # keep this in
     main()
@@ -625,7 +652,7 @@ wr2b = Rook(2, 4, True)
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)
 wb2 = Bishop(5, 2, True)
-bk = King(3, 3, False)
+bk = King(2, 3, False)
 br1 = Rook(4, 3, False)
 br2 = Rook(2, 4, False)
 br3 = Rook(5, 4, False)
@@ -642,7 +669,8 @@ B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2c, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
-#print(wr1.can_move_to(1, 3, B1))
+#conf2unicode(B2)
+#conf2unicode(B3)
 
 
 
