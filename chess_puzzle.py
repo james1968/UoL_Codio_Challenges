@@ -403,15 +403,15 @@ def is_checkmate(side: bool, B: Board) -> bool:
     king_Y: int = 0
 
     check_side = not side
-
+    king: Piece = King(0, 0, check_side)
     if is_check(check_side, B):
         print("Side that has check: ", check_side)
         for i in B[1]:
             if type(i) == King and i.side == side:
                 king: Piece = type(i)(i.pos_X, i.pos_Y, side)
                 print(king.pos_X, king.pos_Y)
-        for j in range(1, B[0]+1):
-            for k in range(1, B[0]+1):
+        for j in range(1, B[0] + 1):
+            for k in range(1, B[0] + 1):
                 if king.can_move_to(j, k, B):
                     return False
         return True
@@ -550,9 +550,6 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
             pass
 
 
-
-
-
 def conf2unicode(B: Board) -> str:
     '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
     size: int = B[0]
@@ -608,40 +605,47 @@ def main() -> None:
     filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
     board_in_play: Board = copy.deepcopy(read_board(filename))
     print("The initial " + bold_start + "configuration is: " + bold_end)
-    conf2unicode(read_board("board_examp.txt"))
-    white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
-    white_piece_move_from: Tuple(int) = location2index(white_move[:2])
-    white_piece_move_to: Tuple(int) = location2index(white_move[2:])
-    white_to_X: int = white_piece_move_to[0]
-    white_to_Y: int = white_piece_move_to[1]
-    white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
-    print(white_piece.pos_X, white_piece.pos_Y, type(white_piece), white_piece.side)
-    white_input: bool = True
-    if white_move == "QUIT":
-        filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
-        save_board(filename_store, board_in_play)
-        print("The game configuration saved.")
-    while white_input == True:
-        if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-            white_move = input(
-                "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
-            white_piece_move_from: Tuple(int) = location2index(white_move[:2])
-            white_piece_move_to: Tuple(int) = location2index(white_move[2:])
-            white_to_X: int = white_piece_move_to[0]
-            white_to_Y: int = white_piece_move_to[1]
-            white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
-        else:
-            white_input = False
-    conf2unicode(board_in_play)
-    if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-        board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
-        print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
-        conf2unicode(board_in_play)
+    conf2unicode(read_board(filename))
+    while True:
+        white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
+        white_piece_move_from: Tuple(int) = location2index(white_move[:2])
+        white_piece_move_to: Tuple(int) = location2index(white_move[2:])
+        white_to_X: int = white_piece_move_to[0]
+        white_to_Y: int = white_piece_move_to[1]
+        white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+        print(white_piece.pos_X, white_piece.pos_Y, type(white_piece), white_piece.side)
+        white_input: bool = True
+        if white_move == "QUIT":
+            filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
+            save_board(filename_store, board_in_play)
+            print("The game configuration saved.")
+            return False
+        while white_input == True:
+            if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+                white_move = input(
+                    "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
+                white_piece_move_from: Tuple(int) = location2index(white_move[:2])
+                white_piece_move_to: Tuple(int) = location2index(white_move[2:])
+                white_to_X: int = white_piece_move_to[0]
+                white_to_Y: int = white_piece_move_to[1]
+                white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+            else:
+                white_input = False
 
-    if is_checkmate(False, board_in_play):
-        print("Game " + bold_start + "over. " + bold_end + "White wins.")
+            if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+                board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
+                print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
+                conf2unicode(board_in_play)
 
-    find_black_move(board_in_play)
+        if is_checkmate(False, board_in_play):
+            print("Game " + bold_start + "over. " + bold_end + "White wins.")
+            return False
+
+        find_black_move(board_in_play)
+
+        if is_checkmate(True, board_in_play):
+            print("Game " + bold_start + "over. " + bold_end + "Black wins.")
+            return False
 
 
 if __name__ == '__main__':  # keep this in
