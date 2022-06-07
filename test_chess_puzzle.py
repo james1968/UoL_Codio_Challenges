@@ -146,17 +146,17 @@ def test_is_check1():
     assert is_check(True, B2) == False
     assert is_check(False, B2) == True
     assert is_check(True, B4) == True
-    #assert is_check(False, B4) == True
-    #assert is_check(True, B6) == False
-    #assert is_check(False, B6) == True
-    #assert is_check(False, B7) == False
-    #assert is_check(True, B7) == False
+    assert is_check(False, B4) == True
+    assert is_check(True, B6) == True
+    assert is_check(False, B6) == False
+    assert is_check(False, B7) == False
+    assert is_check(True, B7) == False
 
 
 
 def test_is_checkmate1():
 
-    assert is_checkmate(True, B2) == True
+    assert is_checkmate(True, B2) == False
     assert is_checkmate(False, B2) == False
     assert is_checkmate(True, B1) == False
     assert is_checkmate(True, B1) == False

@@ -391,7 +391,6 @@ def is_check(side: bool, B: Board) -> bool:
             oppo_pieces.append(j)
     for k in oppo_pieces:
         if k.can_reach(king_x, king_y, B):
-            print(k.side, k.pos_X, k.pos_Y)
             return True
     return False
 
@@ -404,20 +403,17 @@ def is_checkmate(side: bool, B: Board) -> bool:
     - use is_check
     - use can_reach - NOTE: THIS HINT IS WRONG IT SHOULD BE USE "can_move_to" as that checks if move results in check.
     '''
-    king_X: int = 0
-    king_Y: int = 0
 
-    check_side = not side
-    king: Piece = King(0, 0, check_side)
-    if is_check(check_side, B):
-        print("Side that has check: ", check_side)
-        for i in B[1]:
+    if is_check(side, B):
+        print("t")
+        temp_list: Board = copy.deepcopy(B[1])
+        for i in temp_list:
             if type(i) == King and i.side == side:
                 king: Piece = type(i)(i.pos_X, i.pos_Y, side)
-                print(king.pos_X, king.pos_Y)
         for j in range(1, B[0] + 1):
             for k in range(1, B[0] + 1):
                 if king.can_move_to(j, k, B):
+                    print(j, k)
                     return False
         return True
     else:
