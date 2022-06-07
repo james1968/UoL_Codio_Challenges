@@ -1,0 +1,3 @@
+8
+Ba1, Rf4, Bc2, Rd1, Kc1, Bf3
+Ke8, Rd8, Rh6, Re7, Bc4, Bg7

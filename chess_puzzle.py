@@ -5,11 +5,12 @@ import random
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # tuple called coords to hold co-ordinates in x,y format
-    coords = ()
+    coords: Tuple[int, int] = ()
     # check the first coordinate is a letter from a - z
     if loc[0].isalpha() == False:
         return "The first coordinate must be a letter"
-    # Populate tuple with x, y coordinates.  Check that second coordinte is an integer no longer than the length of the board.
+    '''Populate tuple with x, y coordinates.  Check that second coordinate is an integer and it is no longer 
+    than the length of the board.'''
     try:
         int(loc[1:])
         if int(loc[1:]) > 26:
@@ -25,7 +26,8 @@ def location2index(loc: str) -> Tuple[int, int]:
 
 def index2location(x: int, y: int) -> str:
     '''converts  pair of coordinates to corresponding location'''
-    # Check for invalid string coordinates and return ValueError
+    '''Check input variables are ints and that the values are less than the max length of the 
+    board and return ValueError'''
     if type(x) != int or type(y) != int:
         raise ValueError
         print("x or y coordinate must be an integer")
@@ -54,20 +56,20 @@ Board = Tuple[int, List[Piece]]
 
 def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     '''checks if there is piece at coordinates pox_X, pos_Y of board B'''
+    '''check to see if the coordinates being checked are too long for the board and raise and error'''
     board_length: int = B[0]
     try:
         if pos_X > board_length or pos_Y > board_length:
             print("X and Y coordinates must be less than length of the board")
     except ValueError:
         raise ValueError
-
-    for i in range(1, len(B)):
-        for j in range(0, len(B[i])):
-            X = B[i][j].pos_X
-            Y = B[i][j].pos_Y
-            if X == pos_X and Y == pos_Y:
-                return True
-        return False
+    '''check the X and Y coordinates to see if piece is on the board'''
+    for i in B[1]:
+        X = i.pos_X
+        Y = i.pos_Y
+        if X == pos_X and Y == pos_Y:
+            return True
+    return False
 
 
 def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
@@ -82,11 +84,13 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
     except ValueError as V:
         raise V
 
+    '''return the piece at the submitted coordinates'''
     if is_piece_at(pos_X, pos_Y, B):
-        for i in range(1, len(B)):
-            for j in range(0, len(B[i])):
-                if pos_X == B[i][j].pos_X and pos_Y == B[i][j].pos_Y:
-                    return B[i][j]
+        for i in B[1]:
+            if pos_X == i.pos_X and pos_Y == i.pos_Y:
+                return i
+    else:
+        print("There is no piece at these coordinates")
 
 
 class Rook(Piece):
@@ -100,7 +104,13 @@ class Rook(Piece):
         checks if this rook can move to coordinates pos_X, pos_Y
         on board B according to rule [Rule2] and [Rule4](see section Intro)
         Hint: use is_piece_at
+        for the Rook either the X or Y coord has to be the same for it to be able to move to a square.
         '''
+        try:
+            piece_at(self.pos_X, self.pos_Y, B)
+        except AttributeError as A:
+            print("There is no piece at these coordinates")
+            raise AttributeError
 
         if self.pos_X != pos_X and self.pos_Y != pos_Y:
             return False
@@ -108,28 +118,32 @@ class Rook(Piece):
         if is_piece_at(pos_X, pos_Y, B) and piece_at(pos_X, pos_Y, B).side == self.side:
             return False
 
-        if pos_X > self.pos_X:
-            X = pos_X - self.pos_X
-            for i in range(X, self.pos_X, -1):
-                if is_piece_at(i, pos_Y, B):
-                    return False
-            return True
-        if pos_Y > self.pos_Y:
-            Y = pos_Y - self.pos_Y
-            for j in range(Y, self.pos_Y, -1):
-                if is_piece_at(pos_X, j, B):
-                    return False
-            return True
-        if self.pos_X > pos_X:
-            for i in range(pos_X+1, self.pos_X):
-                if is_piece_at(i, pos_Y, B):
-                    return False
-            return True
-        if self.pos_Y > pos_Y:
-            for j in range(pos_Y+1, self.pos_Y):
-                if is_piece_at(pos_X, j, B):
-                    return False
-            return True
+        '''these conditions check the horizontal and vertical from left to right and bottom to top for oieces 
+        of the same colour that might block the piece moving'''
+        if pos_X == self.pos_X or pos_Y == self.pos_Y:
+            if pos_X > self.pos_X:
+                for i in range(pos_X-1, self.pos_X, -1):
+                    if is_piece_at(i, pos_Y, B):
+                        return False
+                return True
+            if pos_Y > self.pos_Y:
+                for j in range(pos_Y-1, self.pos_Y, -1):
+                    if is_piece_at(pos_X, j, B):
+                        return False
+                return True
+
+            '''These conditions check the horizontal and vertical from right to left and top to bottom for pieces of the
+            same colour that might block the piece moving'''
+            if self.pos_X > pos_X:
+                for i in range(pos_X+1, self.pos_X):
+                    if is_piece_at(i, pos_Y, B):
+                        return False
+                return True
+            if self.pos_Y > pos_Y:
+                for j in range(pos_Y+1, self.pos_Y):
+                    if is_piece_at(pos_X, j, B):
+                        return False
+                return True
 
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
@@ -144,39 +158,36 @@ class Rook(Piece):
         - thirdly, construct new board resulting from move
         - finally, to check [Rule5], use is_check on new board
         '''
-
+        r_check_side: bool = self.side
         size: int = B[0]
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
-        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            r_moved_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            r_check_side: bool = not self.side
-            r_new_list_pieces: list[Piece] = B[1]
-            for i in r_new_list_pieces:
-                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
-                    r_new_list_pieces.remove(i)
-            r_new_list_pieces.append(r_moved_piece)
-            r_temp_board: Board = (size, r_new_list_pieces)
-            if is_check(r_check_side, r_temp_board):
-                return False
-            else:
-                return True
 
-        if self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
-            r_cap_piece: Piece = piece_at(pos_X, pos_Y, B)
-            r_side_check: bool = r_cap_piece.side
-            r_moved_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            r_new_list_pieces: list[Piece] = B[1]
-            r_new_list_pieces.remove(r_cap_piece)
+        r_new_list_pieces: list[Piece] = copy.deepcopy(B[1])
+        r_moved_piece: Piece = type(self)(pos_X, pos_Y, self.side)
+
+        if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
             for i in r_new_list_pieces:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     r_new_list_pieces.remove(i)
-            r_new_list_pieces.append(r_moved_piece)
-            r_temp_board: Board = (B[0], r_new_list_pieces)
-            if is_check(r_side_check, r_temp_board):
-                return False
-            else:
-                return True
+
+        elif self.can_reach(pos_X,pos_Y,B) and is_piece_at(pos_X, pos_Y,B):
+            r_cap_piece: Piece = piece_at(pos_X, pos_Y, B)
+            for i in r_new_list_pieces:
+                if i.pos_X == r_cap_piece.pos_X and i.pos_Y == r_cap_piece.pos_Y and type(i) == type(r_cap_piece) and i.side == r_cap_piece.side:
+                    r_new_list_pieces.remove(i)
+            for i in r_new_list_pieces:
+                if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
+                    r_new_list_pieces.remove(i)
+
+        r_new_list_pieces.append(r_moved_piece)
+
+        r_temp_board: Board = (size, r_new_list_pieces)
+
+        if is_check(r_check_side, r_temp_board):
+            return False
+        else:
+            return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -239,36 +250,31 @@ class Bishop(Piece):
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
 
+        b_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
+        b_check_side: bool = self.side
+        b_new_list: list[Piece] = copy.deepcopy(B[1])
+        size: int = B[0]
+
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            b_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            b_check_side: bool = not self.side
-            b_new_list: list[Piece] = copy.deepcopy(B[1])
             for i in b_new_list:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     b_new_list.remove(i)
             b_new_list.append(b_move_piece)
-            b_temp_board: Board = (B[0], b_new_list)
-            if is_check(b_check_side, b_temp_board):
-                return False
-            else:
-                return True
 
         if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
             b_cap_piece: Piece = piece_at(pos_X, pos_Y, B)
-            b_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            b_check_side: bool = not self.side
-            b_new_list: List[Piece] = copy.deepcopy(B[1])
             for i in b_new_list:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     b_new_list.remove(i)
                 if i.pos_X == b_cap_piece.pos_X and i.pos_Y == b_cap_piece.pos_Y and type(i) == type(b_cap_piece) and i.side == b_cap_piece.side:
                     b_new_list.remove(i)
             b_new_list.append(b_move_piece)
-            b_temp_board: Board = (B[0], b_new_list)
-            if is_check(b_check_side, b_temp_board):
-                return False
-            else:
-                return True
+
+        b_temp_board: Board = (size, b_new_list)
+        if is_check(b_check_side, b_temp_board):
+            return False
+        else:
+            return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -317,38 +323,31 @@ class King(Piece):
         # needs to be updated to capture the piece and check if the move results in check
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
+        k_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
+        k_check_side: bool = self.side
+        k_new_list: List[Piece] = copy.deepcopy(B[1])
+        size: int = B[0]
 
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
-            k_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            k_check_side: bool = not self.side
-            k_new_list: List[Piece] = copy.deepcopy(B[1])
             for i in k_new_list:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     k_new_list.remove(i)
             k_new_list.append(k_move_piece)
-            k_temp_board: Board = (B[0], k_new_list)
-            if is_check(k_check_side, k_temp_board):
-                return False
-            else:
-                return True
 
-
-        if self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
+        elif self.can_reach(pos_X, pos_Y, B) and is_piece_at(pos_X, pos_Y, B):
             k_cap_piece: Piece = piece_at(pos_X, pos_Y, B)
-            k_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
-            k_check_side: bool = not self.side
-            k_new_list: List[Piece] = copy.deepcopy(B[1])
             for i in k_new_list:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
                     k_new_list.remove(i)
                 if i.pos_X == k_cap_piece.pos_X and i.pos_Y == k_cap_piece.pos_Y and type(i) == type(k_cap_piece) and i.side == k_cap_piece.side:
                     k_new_list.remove(i)
             k_new_list.append(k_move_piece)
-            k_temp_board: Board = (B[0], k_new_list)
-            if is_check(k_check_side, k_temp_board):
-                return False
-            else:
-                return True
+
+        k_temp_board: Board = (size, k_new_list)
+        if is_check(k_check_side, k_temp_board):
+            return False
+        else:
+            return True
 
     def move_to(self, pos_X: int, pos_Y: int, B: Board) -> Board:
         '''
@@ -380,16 +379,22 @@ def is_check(side: bool, B: Board) -> bool:
     # i.e if False is used in the argument and Black has white in check then true is returned.
     king_x: int = 0
     king_y: int = 0
-    for i in B[1]:
-        if type(i) == King and i.side != side:
+    check_temp_board: Board = copy.deepcopy(B[1])
+    for i in check_temp_board:
+        if type(i) == King and i.side == side:
             king_x = i.pos_X
             king_y = i.pos_Y
 
-    for j in B[1]:
-        if j.side == side:
-            if j.can_reach(king_x, king_y, B):
-                return True
+    oppo_pieces: List[Piece] = []
+    for j in check_temp_board:
+        if j.side != side:
+            oppo_pieces.append(j)
+    for k in oppo_pieces:
+        if k.can_reach(king_x, king_y, B):
+            print(k.side, k.pos_X, k.pos_Y)
+            return True
     return False
+
 
 def is_checkmate(side: bool, B: Board) -> bool:
     '''
@@ -650,31 +655,6 @@ def main() -> None:
 
 if __name__ == '__main__':  # keep this in
     main()
-
-
-wr2b = Rook(2, 4, True)
-wb1 = Bishop(1, 1, True)
-wr1 = Rook(1, 2, True)
-wb2 = Bishop(5, 2, True)
-bk = King(2, 3, False)
-br1 = Rook(4, 3, False)
-br2 = Rook(2, 4, False)
-br3 = Rook(5, 4, False)
-wr2 = Rook(1, 5, True)
-wr2c = Rook(1, 4, True)
-wk = King(3, 5, True)
-br2a = Rook(1, 5, False)
-wr2a = Rook(2, 5, True)
-br2b = Rook(4, 5, False)
-bb1 = Bishop(2, 4, False)
-wr3 = Rook(3, 3, True)
-wr3b = Rook(5, 1, True)
-B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2c, wk])
-B2 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr2, wk])
-B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
-B4 = (5, [wb1, wr1, wr3, bk, br1, br2a, bb1, wr2a, wk])
-#conf2unicode(B2)
-#conf2unicode(B3)
 
 
 
