@@ -34,7 +34,8 @@ B7 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
 B8 = (5, [wb1, wr1, wb2, bk, br1, br2c, br3, wr2, wk])
 B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B10 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
-conf2unicode(B9)
 
-print(is_checkmate(True, B9)) # == False
-#print(wb2.can_move_to(4, 3, B9))
+file = read_board("b.txt")
+conf2unicode(file)
+
+print(find_black_move(file))

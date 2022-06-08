@@ -524,32 +524,26 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
     '''
     bold_start = "\033[1m"
     bold_end = "\033[0;0m"
-    board_length: int = B[0]
+    size: int = B[0]
+    '''Obtain a list of all black pieces on the board to select from for the move'''
     black_pieces: List[Piece] = []
     for i in B[1]:
         if not i.side:
             black_pieces.append(i)
-    poss_moves: List[Tuple] = []
-    for i in range(0, B[0]):
-        for j in range(0, B[0]):
-            moves = (i, j)
-            poss_moves.append(moves)
 
-    piece_to_move = random.choice(black_pieces)
-    orig_black_X = piece_to_move.pos_X
-    orig_black_Y = piece_to_move.pos_Y
-
-    for k in poss_moves:
-        if piece_to_move.can_move_to(k[0], k[1], B):
-            piece_to_move.move_to(k[0], k[1], B)
-            black_loc: str = index2location(k[0], k[1])
-            black_orig_loc: str = index2location(orig_black_X, orig_black_Y)
-            print(bold_start + "Next " + bold_end +  "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc+black_loc}. The " + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
-            conf2unicode(B)
-            break
+    while True:
+        black_move_x: int = random.randint(1, size)
+        black_move_y: int = random.randint(1, size)
+        print(black_move_x, black_move_y)
+        piece_to_move = random.choice(black_pieces)
+        if piece_to_move.can_move_to(black_move_x, black_move_y, B):
+            new_piece: Piece = type(piece_to_move)(black_move_x, black_move_y, False)
+            black_orig_loc: str = index2location(piece_to_move.pos_X, piece_to_move.pos_Y)
+            black_loc: str = index2location(new_piece.pos_X, new_piece.pos_Y)
+            print(bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc + black_loc}.")
+            return new_piece
         else:
-            pass
-
+            True
 
 def conf2unicode(B: Board) -> str:
     '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
@@ -643,6 +637,8 @@ def main() -> None:
             return False
 
         find_black_move(board_in_play)
+        print("The" + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
+
 
         if is_checkmate(True, board_in_play):
             print("Game " + bold_start + "over. " + bold_end + "Black wins.")
