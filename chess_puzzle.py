@@ -78,6 +78,7 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
     assumes some piece at coordinates pox_X, pos_Y of board B is present
     '''
     board_length: int = B[0]
+
     try:
         if pos_X > board_length or pos_Y > board_length:
             print("X and Y coordinates must be less than length of the board")
@@ -90,7 +91,8 @@ def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
             if pos_X == i.pos_X and pos_Y == i.pos_Y:
                 return i
     else:
-        print("There is no piece at these coordinates")
+        #print("There is no piece at these coordinatess")
+        return False
 
 
 class Rook(Piece):
@@ -109,7 +111,7 @@ class Rook(Piece):
         try:
             piece_at(self.pos_X, self.pos_Y, B)
         except AttributeError as A:
-            print("There is no piece at these coordinates")
+            print("There is no Rook at these coordinates")
             raise AttributeError
 
         if self.pos_X != pos_X and self.pos_Y != pos_Y:
@@ -434,29 +436,14 @@ def read_board(filename: str) -> Board:
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
     board_play: Board = tuple()
-    board_arr: List[int, str] = []
     board: List[str] = []
-    run: bool = True
-    bold_start = "\033[1m"
-    bold_end = "\033[0;0m"
-    while run == True:
-        try:
-            infile = open(filename, "r")
-            lines = infile.readlines()
-            if len(lines) != 3:
-                infile.close()
-                filename = input("This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
-        except IOError:
-            filename = input("This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
-        else:
-            infile = open(filename, "r")
-            line = infile.readline()
-            while line != "":
-                board.append(line.rstrip())
-                line = infile.readline()
-            board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
-            run = False
-    board_play += (board_arr[0], )
+    infile = open(filename, "r")
+    line = infile.readline()
+    while line != "":
+        board.append(line.rstrip())
+        line = infile.readline()
+    board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
+    board_play += (board_arr[0],)
     pieces_arr: List[Piece] = []
     for i in range(1, 3):
         if i == 1:
@@ -488,7 +475,7 @@ def save_board(filename: str, B: Board) -> None:
     '''saves board configuration into file in current directory in plain format'''
     file = open(filename,"w")
     file.write(str(B[0]) + "\n")
-    file_line_1 = ""
+    file_line_1: str = ""
     for i in range(1, len(B)):
         for j in range(0, len(B[1])):
             if B[i][j].side == True:
@@ -500,7 +487,7 @@ def save_board(filename: str, B: Board) -> None:
                     file_line_1 += "B" + index2location(B[i][j].pos_X, B[i][j].pos_Y) + ", "
         file.write(file_line_1[:-2])
         file.write("\n")
-    file_line_2 = ""
+    file_line_2: str = ""
     for i in range(1, len(B)):
         for j in range(0, len(B[1])):
             if B[i][j].side == False:
@@ -522,26 +509,20 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
     - use methods of random library
     - use can_move_to
     '''
-    bold_start = "\033[1m"
-    bold_end = "\033[0;0m"
     size: int = B[0]
     '''Obtain a list of all black pieces on the board to select from for the move'''
     black_pieces: List[Piece] = []
     for i in B[1]:
         if not i.side:
             black_pieces.append(i)
-
+    ''' generate a random black piece and random coords and test to see if a valid move.
+    If valid create return the resulting piece'''
     while True:
         black_move_x: int = random.randint(1, size)
         black_move_y: int = random.randint(1, size)
-        print(black_move_x, black_move_y)
         piece_to_move = random.choice(black_pieces)
         if piece_to_move.can_move_to(black_move_x, black_move_y, B):
-            new_piece: Piece = type(piece_to_move)(black_move_x, black_move_y, False)
-            black_orig_loc: str = index2location(piece_to_move.pos_X, piece_to_move.pos_Y)
-            black_loc: str = index2location(new_piece.pos_X, new_piece.pos_Y)
-            print(bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc + black_loc}.")
-            return new_piece
+            return (piece_to_move, black_move_x, black_move_y)
         else:
             True
 
@@ -591,30 +572,39 @@ def main() -> None:
 
     Hint: implementation of this could start as follows:
     filename = input("File name for initial configuration: ")
-    ...
     '''
     bold_start = "\033[1m"
     bold_end = "\033[0;0m"
     blue_text = '\033[96m'
     blue_text_end = '\033[0:0m'
     filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
-    board_in_play: Board = copy.deepcopy(read_board(filename))
-    print("The initial " + bold_start + "configuration is: " + bold_end)
-    conf2unicode(read_board(filename))
+    run: bool = True
+    '''First while loop checks the file is present in the directory and if so creates board to play on'''
+    while run == True:
+        try:
+            infile = open(filename, "r")
+        except IOError:
+            filename = input(
+                "This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
+        else:
+            board_in_play: Board = copy.deepcopy(read_board(filename))
+            print("The initial " + bold_start + "configuration is: " + bold_end)
+            conf2unicode(board_in_play)
+            run = False
     while True:
         white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
-        white_piece_move_from: Tuple(int) = location2index(white_move[:2])
-        white_piece_move_to: Tuple(int) = location2index(white_move[2:])
-        white_to_X: int = white_piece_move_to[0]
-        white_to_Y: int = white_piece_move_to[1]
-        white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
-        print(white_piece.pos_X, white_piece.pos_Y, type(white_piece), white_piece.side)
-        white_input: bool = True
         if white_move == "QUIT":
             filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
             save_board(filename_store, board_in_play)
             print("The game configuration saved.")
             return False
+
+        white_piece_move_from: Tuple[int, int] = location2index(white_move[:2])
+        white_piece_move_to: Tuple[int, int] = location2index(white_move[2:])
+        white_to_X: int = white_piece_move_to[0]
+        white_to_Y: int = white_piece_move_to[1]
+        white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+        white_input: bool = True
         while white_input == True:
             if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
                 white_move = input(
@@ -636,8 +626,16 @@ def main() -> None:
             print("Game " + bold_start + "over. " + bold_end + "White wins.")
             return False
 
-        find_black_move(board_in_play)
-        print("The" + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
+        black_piece_move = find_black_move(board_in_play)
+        print(black_piece_move)
+        black_to_move: Piece = black_piece_move[0]
+        black_X: int = black_piece_move[1]
+        black_Y: int = black_piece_move[2]
+        black_to_move.move_to(black_X, black_Y, board_in_play)
+        black_orig_loc: str = index2location(black_to_move.pos_X, black_to_move.pos_Y)
+        black_loc: str = index2location(black_X, black_Y)
+        print(bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc + black_loc}. The " + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
+        conf2unicode(board_in_play)
 
 
         if is_checkmate(True, board_in_play):

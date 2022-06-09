@@ -35,7 +35,8 @@ B8 = (5, [wb1, wr1, wb2, bk, br1, br2c, br3, wr2, wk])
 B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B10 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
 
-file = read_board("b.txt")
-conf2unicode(file)
 
-print(find_black_move(file))
+board_in_play: Board = copy.deepcopy(read_board("board_examp.txt"))
+
+print(board_in_play)
+#read_board("d")
