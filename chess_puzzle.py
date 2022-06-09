@@ -75,23 +75,14 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
 def piece_at(pos_X: int, pos_Y: int, B: Board) -> Piece:
     '''
     returns the piece at coordinates pox_X, pos_Y of board B
-    assumes some piece at coordinates pox_X, pos_Y of board B is present
-    '''
-    board_length: int = B[0]
+    assumes some piece at coordinates pox_X, pos_Y of board B is present'''
 
-    try:
-        if pos_X > board_length or pos_Y > board_length:
-            print("X and Y coordinates must be less than length of the board")
-    except ValueError as V:
-        raise V
-
-    '''return the piece at the submitted coordinates'''
+    '''Return the piece at the submitted coordinates'''
     if is_piece_at(pos_X, pos_Y, B):
         for i in B[1]:
             if pos_X == i.pos_X and pos_Y == i.pos_Y:
                 return i
     else:
-        #print("There is no piece at these coordinatess")
         return False
 
 
@@ -407,7 +398,6 @@ def is_checkmate(side: bool, B: Board) -> bool:
     '''
 
     if is_check(side, B):
-        print("t")
         temp_list: Board = copy.deepcopy(B[1])
         for i in temp_list:
             if type(i) == King and i.side == side:
@@ -415,7 +405,7 @@ def is_checkmate(side: bool, B: Board) -> bool:
         for j in range(1, B[0] + 1):
             for k in range(1, B[0] + 1):
                 if king.can_move_to(j, k, B):
-                    print(j, k)
+                    #print(j, k)
                     return False
         return True
     else:
@@ -593,7 +583,7 @@ def main() -> None:
             run = False
     while True:
         white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
-        if white_move == "QUIT":
+        if white_move.lower() == "quit":
             filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
             save_board(filename_store, board_in_play)
             print("The game configuration saved.")
@@ -617,10 +607,10 @@ def main() -> None:
             else:
                 white_input = False
 
-            if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
-                board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
-                print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
-                conf2unicode(board_in_play)
+        if white_piece.can_move_to(white_to_X, white_to_Y, board_in_play):
+            board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
+            print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
+            conf2unicode(board_in_play)
 
         if is_checkmate(False, board_in_play):
             print("Game " + bold_start + "over. " + bold_end + "White wins.")
@@ -635,6 +625,7 @@ def main() -> None:
         black_orig_loc: str = index2location(black_to_move.pos_X, black_to_move.pos_Y)
         black_loc: str = index2location(black_X, black_Y)
         print(bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "Black " + bold_start + "is " + bold_end + f"{black_orig_loc + black_loc}. The " + bold_start + "configuration after " + bold_end + "Black's move " + bold_start + "is:" + bold_end)
+        board_in_play = black_to_move.move_to(black_X, black_Y, board_in_play)
         conf2unicode(board_in_play)
 
 
