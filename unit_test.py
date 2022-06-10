@@ -36,7 +36,4 @@ B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B10 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
 
 
-board_in_play: Board = copy.deepcopy(read_board("board_examp.txt"))
-
-print(board_in_play)
-#read_board("d")
+print(location2index("212b25"))

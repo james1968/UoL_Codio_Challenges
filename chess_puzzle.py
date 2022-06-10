@@ -4,8 +4,6 @@ import random
 
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
-    # tuple called coords to hold co-ordinates in x,y format
-    coords: Tuple[int, int] = ()
     # check the first coordinate is a letter from a - z
     if loc[0].isalpha() == False:
         return "The first coordinate must be a letter"
@@ -22,7 +20,6 @@ def location2index(loc: str) -> Tuple[int, int]:
         print("Second item must be an integer: ", e)
 
     return coords
-
 
 def index2location(x: int, y: int) -> str:
     '''converts  pair of coordinates to corresponding location'''
@@ -313,7 +310,7 @@ class King(Piece):
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
-        # needs to be updated to capture the piece and check if the move results in check
+
         if self.can_reach(pos_X, pos_Y, B) == False:
             return False
         k_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
@@ -511,6 +508,7 @@ def find_black_move(B: Board) -> Tuple[Piece, int, int]:
         black_move_x: int = random.randint(1, size)
         black_move_y: int = random.randint(1, size)
         piece_to_move = random.choice(black_pieces)
+        print(black_move_x, black_move_y)
         if piece_to_move.can_move_to(black_move_x, black_move_y, B):
             return (piece_to_move, black_move_x, black_move_y)
         else:
@@ -581,18 +579,26 @@ def main() -> None:
             print("The initial " + bold_start + "configuration is: " + bold_end)
             conf2unicode(board_in_play)
             run = False
+
     while True:
         white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
-        if white_move.lower() == "quit":
+        if white_move.strip().lower() == "quit":
             filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
             save_board(filename_store, board_in_play)
             print("The game configuration saved.")
             return False
 
-        white_piece_move_from: Tuple[int, int] = location2index(white_move[:2])
-        white_piece_move_to: Tuple[int, int] = location2index(white_move[2:])
+        str_len_half = int(len(white_move) / 2)
+        white_x_loc = white_move[:str_len_half]
+        white_y_loc = white_move[str_len_half:]
+        print(white_x_loc, white_y_loc)
+        white_piece_move_from: Tuple[int, int] = location2index(white_x_loc)
+        white_piece_move_to: Tuple[int, int] = location2index(white_y_loc)
         white_to_X: int = white_piece_move_to[0]
         white_to_Y: int = white_piece_move_to[1]
+        if piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play) == False:
+            print("There is no piece at these coordinates: Try another piece.")
+            return False
         white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
         white_input: bool = True
         while white_input == True:

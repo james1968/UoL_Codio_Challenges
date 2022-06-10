@@ -90,7 +90,6 @@ def test_piece_at1():
     assert piece_at(5, 4, B1) == br3
 
 
-
 def test_can_reach1():
     assert wr2.can_reach(3, 2, B1) == False
     assert wr2.can_reach(3, 5, B1) == False
@@ -113,10 +112,6 @@ def test_can_reach1():
     assert wb1.can_reach(3, 3, B1) == True
     assert wb1.can_reach(1, 5, B1) == False
     assert wb1.can_reach(3, 3, B5) == False
-
-
-
-
 
 
 def test_can_move_to1():
