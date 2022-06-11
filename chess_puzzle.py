@@ -656,9 +656,28 @@ def main() -> None:
         white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
         white_input: bool = True
         while white_input == True:
-            if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play) or not piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play):
+            if white_piece == False:
                 white_move = input(
                     "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
+                if white_move.strip().lower() == "quit":
+                    filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
+                    save_board(filename_store, board_in_play)
+                    print("The game configuration saved.")
+                    return False
+                white_piece_move_from: Tuple(int) = location2index(white_move[:2])
+                white_piece_move_to: Tuple(int) = location2index(white_move[2:])
+                white_to_X: int = white_piece_move_to[0]
+                white_to_Y: int = white_piece_move_to[1]
+                white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
+            if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play) or not piece_at(
+                    white_piece_move_from[0], white_piece_move_from[1], board_in_play):
+                white_move = input(
+                    "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
+                if white_move.strip().lower() == "quit":
+                    filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
+                    save_board(filename_store, board_in_play)
+                    print("The game configuration saved.")
+                    return False
                 white_piece_move_from: Tuple(int) = location2index(white_move[:2])
                 white_piece_move_to: Tuple(int) = location2index(white_move[2:])
                 white_to_X: int = white_piece_move_to[0]
