@@ -48,6 +48,7 @@ wr2b = Rook(2, 4, True)
 wr3b = Rook(5, 1, True)
 br2b = Bishop(1, 4, False)
 br2c = Rook(4, 5, False)
+br2d = Rook(1, 1, False)
 
 
 
@@ -61,6 +62,8 @@ B6 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B7 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
 B8 = (5, [wb1, wr1, wb2, bk, br1, br2c, br3, wr2, wk])
 B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
+B10 = (1, [wb1])
+B11 = (1, [br2d])
 
 
 
@@ -190,3 +193,10 @@ def test_read_board1():
 
 def test_conf2unicode1():
     assert conf2unicode(B1) == "♖ ♔  \n ♜  ♜\n ♚ ♜ \n♖   ♗\n♗    "
+
+def test_is_stalemate():
+    assert is_stalemate(True, B10) == True
+    assert is_stalemate(False, B10) == True
+    assert is_stalemate(True, B1) == False
+    assert is_stalemate(False, B1) == False
+    assert is_stalemate(True, B8) == True

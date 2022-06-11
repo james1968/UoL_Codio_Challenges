@@ -34,6 +34,9 @@ B7 = (5, [wb1, wr1, wb2, bk, br1, br2b, br3, wr3b, wk])
 B8 = (5, [wb1, wr1, wb2, bk, br1, br2c, br3, wr2, wk])
 B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B10 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2b, wk])
+B11 = (1, [wb1])
+B12 = (3, [wb1])
 
-
-print(location2index("212b25"))
+conf2unicode(B8)
+print(is_stalemate(True, B8))
+print()
