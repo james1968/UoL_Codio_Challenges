@@ -55,13 +55,7 @@ def is_piece_at(pos_X: int, pos_Y: int, B: Board) -> bool:
     '''checks if there is piece at coordinates pox_X, pos_Y of board B'''
     '''check to see if the coordinates being checked are too long for the board and raise and error'''
     '''validation check to ensure coordinates are not longer than the board length'''
-    board_length: int = B[0]
-    #try:
-    #    if pos_X > board_length or pos_Y > board_length:
-    #        print("X and Y coordinates must be less than length of the board")
-    #except ValueError:
-    #    raise ValueError
-    
+
     # check the X and Y coordinates to see if piece is on the board.
     for i in B[1]:
         X = i.pos_X
@@ -343,7 +337,7 @@ class King(Piece):
         k_new_list: List[Piece] = copy.deepcopy(B[1])
         size: int = B[0]
 
-        # moves piece and catured piece if applicable on a temp board and checks for "check".
+        # moves piece and captured piece if applicable on a temp board and checks for "check".
         if self.can_reach(pos_X, pos_Y, B) and not is_piece_at(pos_X, pos_Y, B):
             for i in k_new_list:
                 if i.pos_X == self.pos_X and i.pos_Y == self.pos_Y and type(i) == type(self) and i.side == self.side:
@@ -655,7 +649,6 @@ def main() -> None:
         str_len_half = int(len(white_move) / 2)
         white_x_loc = white_move[:str_len_half]
         white_y_loc = white_move[str_len_half:]
-        print(white_x_loc, white_y_loc)
         white_piece_move_from: Tuple[int, int] = location2index(white_x_loc)
         white_piece_move_to: Tuple[int, int] = location2index(white_y_loc)
         white_to_X: int = white_piece_move_to[0]
@@ -683,6 +676,10 @@ def main() -> None:
             print("Game " + bold_start + "over. " + bold_end + "White wins.")
             return False
 
+        if is_stalemate(True, board_in_play):
+            print("Game " + bold_start + "over. " + bold_end +  "Draw")
+            return False
+
         # creates black move and creates new board if valid
         black_piece_move = find_black_move(board_in_play)
         black_to_move: Piece = black_piece_move[0]
@@ -700,6 +697,9 @@ def main() -> None:
             print("Game " + bold_start + "over. " + bold_end + "Black wins.")
             return False
 
+        if is_stalemate(False, board_in_play):
+            print("Game " + bold_start + "over. " + bold_end +  "Draw")
+            return False
 
 if __name__ == '__main__':  # keep this in
     main()
