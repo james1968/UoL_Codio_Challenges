@@ -4,17 +4,18 @@ from chess_puzzle import *
 
 
 def test_locatio2index1():
-    assert location2index("e2") == (5, 2)
+    def test_locatio2index1():
+        assert location2index("e2") == (5, 2)
 
-    assert location2index("S8") == (19, 8)
+        assert location2index("S8") == (19, 8)
 
-    assert location2index("52") == "The first coordinate must be a letter"
+        assert location2index("52") == "The first coordinate must be a letter"
 
-    with pytest.raises(ValueError):
-        location2index("aa")
+        with pytest.raises(ValueError):
+            location2index("aa")
 
-    with pytest.raises(ValueError):
-        location2index("a123")
+        with pytest.raises(ValueError):
+            location2index("a123")
 
 
 def test_index2location1():
@@ -29,7 +30,6 @@ def test_index2location1():
 
     with pytest.raises(ValueError):
         index2location(3, "d")
-
 
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)

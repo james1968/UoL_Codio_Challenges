@@ -1,6 +1,7 @@
 from typing import *
 import copy
 import random
+import re
 
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
@@ -12,12 +13,13 @@ def location2index(loc: str) -> Tuple[int, int]:
     try:
         int(loc[1:])
         if int(loc[1:]) > 26:
-            raise ValueError
             print("Invalid y value is larger than board size.")
+            raise ValueError
         coords = ((int(ord(loc[0].lower())) - 96), int(loc[1:]))
     except Exception as e:
-        raise ValueError
         print("Second item must be an integer: ", e)
+        raise ValueError
+
 
     return coords
 
@@ -26,11 +28,13 @@ def index2location(x: int, y: int) -> str:
     '''Check input variables are ints and that the values are less than the max length of the 
     board and return ValueError'''
     if type(x) != int or type(y) != int:
-        raise ValueError
         print("x or y coordinate must be an integer")
-    if x > 26 or y > 26:
         raise ValueError
+
+    if x > 26 or y > 26:
         print("x or y coordinate must be less than maximum board length")
+        raise ValueError
+
 
     str_coord = (chr(x + 96) + str(y))
     return str_coord
@@ -187,6 +191,8 @@ class Rook(Piece):
         returns new board resulting from move of this rook to coordinates pos_X, pos_Y on board B
         assumes this move is valid according to chess rules
         '''
+
+
 
         r_new_piece: Piece = Rook(pos_X, pos_Y, self.side)
 
@@ -381,6 +387,7 @@ class King(Piece):
             k_new_board_pieces.append(k_new_piece)
 
         return k_new_board
+
 
 def is_check(side: bool, B: Board) -> bool:
     '''
@@ -639,6 +646,7 @@ def main() -> None:
     # main game loop, starts with white move or saving file if quit is entered.
     while True:
         white_move = input("Next " + blue_text + "move " + blue_text_end + "of White: ")
+
         if white_move.strip().lower() == "quit":
             filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
             save_board(filename_store, board_in_play)

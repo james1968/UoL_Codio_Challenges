@@ -1,3 +1,3 @@
 12
-Rf4, Bc2, Kc1, Bf3, Bb2, Rf1
-Rd11, Rh10, Re12, Bc9, Kg11, Bi5
+Rf4, Bc2, Kc1, Bf3, Rk1, Bd4
+Rh10, Bg7, Kg12, Rb12, Rd4, Bb10
