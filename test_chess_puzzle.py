@@ -11,11 +11,15 @@ def test_locatio2index1():
 
         assert location2index("52") == "The first coordinate must be a letter"
 
-        with pytest.raises(ValueError):
-            location2index("aa")
+        assert location2index("a123") == "Invalid y value is larger than board size."
 
-        with pytest.raises(ValueError):
-            location2index("a123")
+        assert location2index("aa") == "Second item must be an integer."
+
+        #with pytest.raises(ValueError):
+        #    location2index("aa")
+
+        #with pytest.raises(ValueError):
+        #    location2index("a123")
 
 
 def test_index2location1():

@@ -6,19 +6,21 @@ import re
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # check the first coordinate is a letter from a - z
-    if loc[0].isalpha() == False:
+    try:
+        if loc[0].isalpha() == True:
+            pass
+    except ValueError as e:
         return "The first coordinate must be a letter"
+
     '''Populate tuple with x, y coordinates.  Check that second coordinate is an integer and it is no longer 
     than the length of the board.'''
     try:
         int(loc[1:])
         if int(loc[1:]) > 26:
-            print("Invalid y value is larger than board size.")
-            raise ValueError
+            return "Invalid y value is larger than board size."
         coords = ((int(ord(loc[0].lower())) - 96), int(loc[1:]))
     except Exception as e:
-        print("Second item must be an integer: ", e)
-        raise ValueError
+        return "Second item must be an integer."
 
 
     return coords
@@ -634,7 +636,7 @@ def main() -> None:
     # First while loop checks the file is present in the directory and if so creates board to play on.
     while run == True:
         try:
-            infile = open(filename, "r")
+            open(filename, "r")
         except IOError:
             filename = input(
                 "This " + bold_start + "is not " + bold_end + "a valid " + bold_start + "file. File name for " + bold_end + "initial configuration: ")
@@ -678,9 +680,8 @@ def main() -> None:
                 white_to_Y: int = white_piece_move_to[1]
                 white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
             if not white_piece.can_move_to(white_to_X, white_to_Y, board_in_play) or not piece_at(
-                    white_piece_move_from[0], white_piece_move_from[1], board_in_play):
-                white_move = input(
-                    "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
+                white_piece_move_from[0], white_piece_move_from[1], board_in_play):
+                white_move = input("This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
                 if white_move.strip().lower() == "quit":
                     filename_store = input(bold_start + "File name to " + bold_end + "store the configuration: ")
                     save_board(filename_store, board_in_play)
@@ -698,6 +699,7 @@ def main() -> None:
             board_in_play = white_piece.move_to(white_to_X, white_to_Y, board_in_play)
             print("The " + bold_start + "configuration after " + bold_end + "White's move is: ")
             conf2unicode(board_in_play)
+
 
         if is_checkmate(False, board_in_play):
             print("Game " + bold_start + "over. " + bold_end + "White wins.")
