@@ -1,5 +1,4 @@
 import pytest
-from typing import *
 from chess_puzzle import *
 
 
@@ -35,6 +34,8 @@ def test_index2location1():
     with pytest.raises(ValueError):
         index2location(3, "d")
 
+
+# pieces to be used in test cases
 wb1 = Bishop(1, 1, True)
 wr1 = Rook(1, 2, True)
 wb2 = Bishop(5, 2, True)
@@ -53,12 +54,11 @@ wr3b = Rook(5, 1, True)
 br2b = Bishop(1, 4, False)
 br2c = Rook(4, 5, False)
 br2d = Rook(1, 1, False)
-
 wr64 = Rook(6, 4, True)
 wb32 = Bishop(3, 2, True)
 wr41 = Rook(4, 1, True)
 wk31 = King(3, 1, True)
-wb63 = Bishop(6,3, True)
+wb63 = Bishop(6, 3, True)
 bk58 = King(5, 8, False)
 br48 = Rook(4, 8, False)
 br86 = Rook(8, 6, False)
@@ -67,6 +67,8 @@ bb34 = Bishop(3, 4, False)
 bb77 = Bishop(7, 7, False)
 wr68 = Rook(6, 8, True)
 
+
+# boards to be used in test cases
 B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk])
 B3 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk, bb1])
@@ -109,6 +111,12 @@ def test_piece_at1():
     assert piece_at(3, 5, B1) == wk
     assert piece_at(1, 5, B1) == wr2
     assert piece_at(5, 4, B1) == br3
+    assert piece_at(8, 8, B1) == False
+    assert piece_at(5, 5, B1) == False
+    assert piece_at(6, 3, B12) == wb63
+    assert piece_at(5, 8, B12) == bk58
+    assert piece_at(8, 8, B12) == False
+    assert piece_at(12, 12, B12) == False
 
 
 def test_can_reach1():
@@ -133,6 +141,10 @@ def test_can_reach1():
     assert wb1.can_reach(3, 3, B1) == True
     assert wb1.can_reach(1, 5, B1) == False
     assert wb1.can_reach(3, 3, B5) == False
+    assert wr64.can_reach(6, 7, B12) == True
+    assert wb63.can_reach(7, 4, B12) == True
+    assert wr64.can_reach(6, 8, B12_check) == False
+    assert wb63.can_reach(6, 2, B12) == False
 
 
 def test_can_move_to1():
@@ -155,7 +167,10 @@ def test_can_move_to1():
     assert bb1.can_move_to(3, 3, B3) == False
     assert bb1.can_move_to(2, 2, B3) == False
     assert bb1.can_move_to(4, 5, B3) == False
-
+    assert wr64.can_move_to(6, 7, B12) == True
+    assert wb63.can_move_to(7, 4, B12) == True
+    assert wr64.can_move_to(6, 8, B12_check) == False
+    assert wb63.can_move_to(6, 2, B12) == False
 
 
 def test_is_check1():
@@ -169,7 +184,7 @@ def test_is_check1():
     assert is_check(True, B7) == False
     assert is_check(True, B12) == False
     assert is_check(False, B12_check) == True
-
+    assert is_check(True, B12_check) == False
 
 
 def test_is_checkmate1():
@@ -184,14 +199,12 @@ def test_is_checkmate1():
     assert is_checkmate(True, B12_check) == False
 
 
-
-
 def test_read_board1():
     with pytest.raises(IOError):
         read_board("d")
 
-    #with pytest.raises(IOError):
-    #   read_board("board_examp1.txt")
+    B = read_board("board_examp1.txt")
+    assert B[0] == 5
 
     B = read_board("board_examp.txt")
     assert B[0] == 5

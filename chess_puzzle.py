@@ -475,13 +475,20 @@ def read_board(filename: str) -> Board:
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
+    bold_start = "\033[1m"
+    bold_end = "\033[0;0m"
     board_play: Board = tuple()
     board: List[str] = []
     infile = open(filename, "r")
     line = infile.readline()
+    line_count: int = 0
     while line != "":
+        line_count += 1
         board.append(line.rstrip())
         line = infile.readline()
+
+    if line_count > 3:
+        print(bold_start + "WARNING: " + bold_end + "input file has too many lines, only the board size and white and black pieces have been processed.")
 
     # creates an list of list that has all the pieces from the input file in their own list
     board_arr = [int(board[0]), board[1].split(","), board[2].split(",")]
@@ -733,7 +740,6 @@ def main() -> None:
 
 if __name__ == '__main__':  # keep this in
     main()
-
 
 
 
