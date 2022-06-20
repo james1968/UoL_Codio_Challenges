@@ -1,7 +1,6 @@
 from typing import *
 import copy
 import random
-import re
 
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
@@ -9,6 +8,8 @@ def location2index(loc: str) -> Tuple[int, int]:
     try:
         if loc[0].isalpha() == True:
             pass
+        else:
+            return "The first coordinate must be a letter"
     except ValueError as e:
         return "The first coordinate must be a letter"
 

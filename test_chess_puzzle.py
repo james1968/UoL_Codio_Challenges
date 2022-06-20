@@ -3,23 +3,21 @@ from typing import *
 from chess_puzzle import *
 
 
+
 def test_locatio2index1():
-    def test_locatio2index1():
-        assert location2index("e2") == (5, 2)
+    assert location2index("e2") == (5, 2)
 
-        assert location2index("S8") == (19, 8)
+    assert location2index("S8") == (19, 8)
 
-        assert location2index("52") == "The first coordinate must be a letter"
+    assert location2index("Z26") == (26, 26)
 
-        assert location2index("a123") == "Invalid y value is larger than board size."
+    assert location2index("z27") == "Invalid y value is larger than board size."
 
-        assert location2index("aa") == "Second item must be an integer."
+    assert location2index("52") == "The first coordinate must be a letter"
 
-        #with pytest.raises(ValueError):
-        #    location2index("aa")
+    assert location2index("a123") == "Invalid y value is larger than board size."
 
-        #with pytest.raises(ValueError):
-        #    location2index("a123")
+    assert location2index("aa") == "Second item must be an integer."
 
 
 def test_index2location1():
@@ -28,6 +26,8 @@ def test_index2location1():
     assert index2location(10, 14) == "j14"
 
     assert index2location(23, 2) == "w2"
+
+    assert index2location(26, 26) == "z26"
 
     with pytest.raises(ValueError):
         index2location("e", 5)
@@ -54,8 +54,18 @@ br2b = Bishop(1, 4, False)
 br2c = Rook(4, 5, False)
 br2d = Rook(1, 1, False)
 
-
-
+wr64 = Rook(6, 4, True)
+wb32 = Bishop(3, 2, True)
+wr41 = Rook(4, 1, True)
+wk31 = King(3, 1, True)
+wb63 = Bishop(6,3, True)
+bk58 = King(5, 8, False)
+br48 = Rook(4, 8, False)
+br86 = Rook(8, 6, False)
+br57 = Rook(5, 7, False)
+bb34 = Bishop(3, 4, False)
+bb77 = Bishop(7, 7, False)
+wr68 = Rook(6, 8, True)
 
 B1 = (5, [wb1, wr1, wb2, bk, br1, br2, br3, wr2, wk])
 B2 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr2a, wk])
@@ -68,7 +78,8 @@ B8 = (5, [wb1, wr1, wb2, bk, br1, br2c, br3, wr2, wk])
 B9 = (5, [wb1, wr1, wb2, bk, br1, br2a, br3, wr3b, wk])
 B10 = (1, [wb1])
 B11 = (1, [br2d])
-
+B12 = (8, [wb1, wr64, wb32, wr41, wk31, wb63, bk58, br48, br86, br57, bb34, bb77])
+B12_check = (8, [wb1, wr64, wb32, wr41, wk31, wb63, bk58, br48, br86, br57, bb34, bb77, wr68])
 
 
 '''
@@ -87,6 +98,9 @@ def test_is_piece_at1():
     assert is_piece_at(2, 5, B1) == False
     assert is_piece_at(3, 5, B1) == True
     assert is_piece_at(4, 5, B1) == False
+    assert is_piece_at(7, 7, B12) == True
+    assert is_piece_at(5, 5, B12) == False
+    assert is_piece_at(12, 12, B12) == False
 
 
 def test_piece_at1():
@@ -153,6 +167,8 @@ def test_is_check1():
     assert is_check(False, B6) == False
     assert is_check(False, B7) == False
     assert is_check(True, B7) == False
+    assert is_check(True, B12) == False
+    assert is_check(False, B12_check) == True
 
 
 
@@ -164,6 +180,8 @@ def test_is_checkmate1():
     assert is_checkmate(True, B1) == False
     assert is_checkmate(False, B9) == False
     assert is_checkmate(True, B9) == True
+    assert is_checkmate(False, B12_check) == True
+    assert is_checkmate(True, B12_check) == False
 
 
 
