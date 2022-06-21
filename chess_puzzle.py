@@ -2,6 +2,12 @@ from typing import *
 import copy
 import random
 
+# global variable for bold and blue text
+bold_start = "\033[1m"
+bold_end = "\033[0;0m"
+blue_text = '\033[96m'
+blue_text_end = '\033[0:0m'
+
 def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # check the first coordinate is a letter from a - z
@@ -475,8 +481,6 @@ def read_board(filename: str) -> Board:
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
-    bold_start = "\033[1m"
-    bold_end = "\033[0;0m"
     board_play: Board = tuple()
     board: List[str] = []
     infile = open(filename, "r")
@@ -635,10 +639,6 @@ def main() -> None:
     Hint: implementation of this could start as follows:
     filename = input("File name for initial configuration: ")
     '''
-    bold_start = "\033[1m"
-    bold_end = "\033[0;0m"
-    blue_text = '\033[96m'
-    blue_text_end = '\033[0:0m'
     filename: str = input(bold_start + "File name for " + bold_end + "initial configuration: ")
     run: bool = True
     # First while loop checks the file is present in the directory and if so creates board to play on.

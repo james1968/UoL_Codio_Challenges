@@ -19,3 +19,14 @@ print("---")
 fib(6)
 print("---")
 fib(7)
+
+
+def my_sum(lst):
+    '''returns sum of the list using recursion'''
+    if len(lst) == 1:
+        return lst[0]
+    else:
+        return my_sum(lst[:1]) + my_sum(lst[1:])
+print(my_sum([5]))
+print(my_sum([1,2,3]))
+print(my_sum([1,2,3,4]))
