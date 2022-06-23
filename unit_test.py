@@ -52,5 +52,5 @@ B12 = (8, [wb1, wr64, wb32, wr41, wk31, wb63, bk58, br48, br86, br57, bb34, bb77
 B12_check = (8, [wb1, wr64, wb32, wr41, wk31, wb63, bk58, br48, br86, br57, bb34, bb77, wr68])
 
 
-conf2unicode(B12_check)
+conf2unicode(B4)
 print(read_board("board_examp.txt"))

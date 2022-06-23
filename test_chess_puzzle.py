@@ -3,35 +3,23 @@ from chess_puzzle import *
 
 def test_locatio2index1():
     assert location2index("e2") == (5, 2)
-
     assert location2index("S8") == (19, 8)
-
     assert location2index("Z26") == (26, 26)
-
     assert location2index("z27") == "Invalid y value is larger than board size."
-
     assert location2index("52") == "The first coordinate must be a letter"
-
     assert location2index("a123") == "Invalid y value is larger than board size."
-
     assert location2index("aa") == "Second item must be an integer."
-
 
 def test_index2location1():
     assert index2location(5, 2) == "e2"
-
     assert index2location(10, 14) == "j14"
-
     assert index2location(23, 2) == "w2"
-
     assert index2location(26, 26) == "z26"
-
     with pytest.raises(ValueError):
         index2location("e", 5)
 
     with pytest.raises(ValueError):
         index2location(3, "d")
-
 
 # pieces to be used in test cases
 wb1 = Bishop(1, 1, True)
@@ -186,7 +174,6 @@ def test_is_check1():
 
 
 def test_is_checkmate1():
-
     assert is_checkmate(True, B2) == False
     assert is_checkmate(False, B2) == False
     assert is_checkmate(True, B1) == False
@@ -226,6 +213,16 @@ def test_read_board1():
 
 def test_conf2unicode1():
     assert conf2unicode(B1) == "♖ ♔  \n ♜  ♜\n ♚ ♜ \n♖   ♗\n♗    "
+    assert conf2unicode(B12_check) == "   ♜♚♖  \n    ♜ ♝ " \
+                                      "\n       ♜" \
+                                      "\n        " \
+                                      "\n  ♝  ♖  " \
+                                      "\n     ♗  " \
+                                      "\n  ♗     " \
+                                      "\n♗ ♔♖    "
+    assert conf2unicode(B2) == "♜♖♔  \n    ♜\n ♚ ♜ \n♖   ♗\n♗    "
+    assert conf2unicode(B3) == "♜♖♔ ♝\n    ♜\n ♚ ♜ \n♖   ♗\n♗    "
+    assert conf2unicode(B4) == "♜ ♔  \n ♖  ♜\n ♚ ♜ \n♖   ♗\n♗    "
 
 def test_is_stalemate():
     assert is_stalemate(True, B10) == True
