@@ -12,7 +12,7 @@ def location2index(loc: str) -> Tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
     # check the first coordinate is a letter from a - z
     try:
-        if loc[0].isalpha() == True:
+        if loc[0].isalpha():
             pass
         else:
             return "The first coordinate must be a letter"
@@ -162,7 +162,7 @@ class Rook(Piece):
         r_check_side: bool = self.side
         size: int = B[0]
         # make sure the piece can reach  square in question
-        if self.can_reach(pos_X, pos_Y, B) == False:
+        if not self.can_reach(pos_X, pos_Y, B):
             return False
         # create two pieces one for the piece to be moved and one for the moved piece
         r_new_list_pieces: list[Piece] = copy.deepcopy(B[1])
@@ -263,7 +263,7 @@ class Bishop(Piece):
 
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this bishop can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
-        if self.can_reach(pos_X, pos_Y, B) == False:
+        if not self.can_reach(pos_X, pos_Y, B):
             return False
 
         b_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
@@ -345,7 +345,7 @@ class King(Piece):
     def can_move_to(self, pos_X: int, pos_Y: int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
 
-        if self.can_reach(pos_X, pos_Y, B) == False:
+        if not self.can_reach(pos_X, pos_Y, B):
             return False
         k_move_piece: Piece = type(self)(pos_X, pos_Y, self.side)
         k_check_side: bool = self.side
@@ -673,8 +673,8 @@ def main() -> None:
         white_to_Y: int = white_piece_move_to[1]
         white_piece: Piece = piece_at(white_piece_move_from[0], white_piece_move_from[1], board_in_play)
         white_input: bool = True
-        while white_input == True:
-            if white_piece == False:
+        while white_input:
+            if not white_piece:
                 white_move = input(
                     "This " + bold_start + "is not " + bold_end + "a valid move. " + bold_start + "Next " + bold_end + "move " + bold_start + "of " + bold_end + "White: ")
                 if white_move.strip().lower() == "quit":

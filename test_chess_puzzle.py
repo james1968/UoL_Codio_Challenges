@@ -1,8 +1,6 @@
 import pytest
 from chess_puzzle import *
 
-
-
 def test_locatio2index1():
     assert location2index("e2") == (5, 2)
 
